@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     title: project.title,
     description: project.description,
     path: `/projects/${project.slug}`,
-    og: { sub: project.subtitle, bg: project.accentColor, accent: project.themeColor },
+    og: { sub: project.subtitle, bg: project.themeColor, accent: project.accentColor },
   })
 }
 

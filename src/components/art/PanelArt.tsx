@@ -77,7 +77,6 @@ const EXTRAS: Record<Variant, React.ReactNode> = {
   about: (
     <>
       <PermitStamp label="PERMIT" sub="ARCHIVE 2026" className="stamp-about" />
-      <CornerCluster corner="tl" />
     </>
   ),
   blogs: (
@@ -95,6 +94,7 @@ const EXTRAS: Record<Variant, React.ReactNode> = {
   contact: (
     <>
       <BulbChain className="bulbs-top" />
+      <ChevronBand className="chevrons-bottom" flip />
       <HazardTape className="hazards-bottom" />
       <BulbChain className="bulbs-bottom" />
     </>

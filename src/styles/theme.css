@@ -30,6 +30,9 @@
   --font-body: var(--font-barlow), 'Barlow', 'Helvetica Neue', Arial, sans-serif;
 
   --word-size: clamp(4.5rem, 15vw, 11rem);
+
+  /* Height of the fixed road navigation; ornaments must clear it */
+  --road-h: 54px;
 }
 
 * {
@@ -80,6 +83,7 @@ html, body {
 .trim-halftone {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background-image:
     radial-gradient(circle at center, var(--trim-dot, rgba(255, 248, 231, 0.55)) 0.9px, transparent 1.15px),
     radial-gradient(circle at center, var(--trim-dot, rgba(255, 248, 231, 0.55)) 1.5px, transparent 1.8px);
@@ -735,8 +739,9 @@ html, body {
   font-size: 1.8rem;
   line-height: 1;
   color: var(--t-ink);
-  opacity: 0.45;
+  opacity: 0.7;
 }
+.cover-c .cover-num { color: var(--t-paper); opacity: 0.85; }
 .cover-flower {
   font-size: clamp(3rem, 6vw, 5rem);
   color: var(--t-red);
@@ -942,6 +947,7 @@ html, body {
   border-bottom: 2px solid var(--t-ink);
   padding-bottom: 0.15rem;
   cursor: pointer;
+  align-self: flex-start;
 }
 
 /* ——— ROAD NAVIGATION & LORRY ——— */
@@ -1114,8 +1120,10 @@ html, body {
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .panel-inner {
-    padding-bottom: 120px;
+    padding-bottom: 150px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
     scrollbar-width: none;
   }
   .panel-inner::-webkit-scrollbar { display: none; }
@@ -1129,6 +1137,7 @@ html, body {
 }
 
 @media (max-width: 700px) {
+  :root { --road-h: 44px; }
   .road { height: 44px; }
   .stop { font-size: 0.45rem; letter-spacing: 0.08em; }
   .truck { width: 92px; bottom: 44px; }
@@ -1268,7 +1277,7 @@ html, body {
   opacity: 0.95;
 }
 .chevrons-top { top: clamp(14px, 1.6vw, 24px); }
-.chevrons-bottom { bottom: clamp(14px, 1.6vw, 24px); }
+.chevrons-bottom { bottom: calc(var(--road-h) + 10px); }
 .chevron-band.is-flip { transform: scaleY(-1); }
 
 /* ——— Bulb chains ——— */
@@ -1306,7 +1315,7 @@ html, body {
   to { transform: rotate(0.6deg); }
 }
 .bulbs-top { top: 8px; }
-.bulbs-bottom { bottom: 10px; }
+.bulbs-bottom { bottom: calc(var(--road-h) + 26px); }
 .bulbs-inline {
   position: relative;
   left: 0;
@@ -1331,7 +1340,7 @@ html, body {
   border-top: 2px solid var(--t-ink);
   border-bottom: 2px solid var(--t-ink);
 }
-.hazards-bottom { bottom: 6px; }
+.hazards-bottom { bottom: calc(var(--road-h) + 8px); }
 
 /* ——— Permit stamps ——— */
 .permit-stamp {
@@ -1343,7 +1352,7 @@ html, body {
   color: var(--t-ink);
   opacity: 0.5;
 }
-.stamp-about { right: 9%; top: 22%; transform: rotate(9deg); }
+.stamp-about { right: 9%; top: 22%; transform: rotate(9deg); color: var(--t-paper); opacity: 0.6; }
 .stamp-blogs { right: 7%; top: 16%; transform: rotate(-7deg); }
 .stamp-inline {
   position: absolute;
@@ -1477,8 +1486,8 @@ html, body {
 }
 .status-hot { color: var(--t-yellow); font-weight: 700; }
 .cover-motif {
-  width: clamp(70px, 8vw, 118px);
-  height: clamp(70px, 8vw, 118px);
+  width: clamp(120px, 12vw, 190px);
+  height: clamp(120px, 12vw, 190px);
 }
 
 /* Link cards need explicit reset since they are <a> now */
@@ -1774,6 +1783,17 @@ a.project-card {
   margin: 0 auto;
   padding: clamp(2rem, 5vw, 4rem) clamp(1.2rem, 5vw, 2rem);
 }
+.blog-heading {
+  margin: 0.4rem 0 0.9rem;
+  font-family: var(--font-poster);
+  font-style: oblique 7deg;
+  font-weight: 700;
+  font-size: clamp(2.3rem, 4.6vw, 4.4rem);
+  line-height: 0.96;
+  text-transform: uppercase;
+  color: var(--t-blue);
+  text-shadow: 4px 4px 0 var(--t-red);
+}
 .permit-header {
   display: flex;
   flex-wrap: wrap;
@@ -1794,13 +1814,8 @@ a.project-card {
   font-size: clamp(1.02rem, 1.25vw, 1.15rem);
   line-height: 1.7;
 }
-.prose > p:first-of-type::first-letter {
-  float: left;
-  font-family: var(--font-glyph);
-  font-size: 4.4rem;
-  line-height: 0.8;
-  padding-right: 0.6rem;
-  color: var(--t-red);
+.prose > p:first-of-type {
+  font-size: clamp(1.12rem, 1.35vw, 1.25rem);
 }
 .tag-row {
   display: flex;

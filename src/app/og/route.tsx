@@ -54,7 +54,7 @@ export async function GET(request: Request) {
           }}
         />
         <div style={{ display: 'flex', fontSize: 26, letterSpacing: 8, fontWeight: 700 }}>
-          HORN OK PLEASE ✦ NH-44
+          HORN OK PLEASE // NH-44
         </div>
         <div
           style={{
@@ -67,19 +67,30 @@ export async function GET(request: Request) {
         >
           <div
             style={{
-              fontSize: title.length > 40 ? 64 : 84,
-              fontWeight: 800,
-              lineHeight: 1,
+              fontSize: title.length > 40 ? 62 : 82,
+              fontWeight: 900,
+              lineHeight: 0.95,
               textTransform: 'uppercase',
-              letterSpacing: -1,
+              letterSpacing: -1.5,
             }}
           >
             {title}
           </div>
           <div style={{ fontSize: 28, marginTop: 24, opacity: 0.92 }}>{sub}</div>
         </div>
-        <div style={{ display: 'flex', fontSize: 22, letterSpacing: 6, opacity: 0.85 }}>
-          DHRUVA VURA ✦ DESIGNER & CREATIVE ENGINEER ✦ 2026
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            borderTop: '6px solid #0a0a0a',
+            paddingTop: 18,
+            fontSize: 20,
+            letterSpacing: 5,
+            opacity: 0.9,
+          }}
+        >
+          <span>DHRUVA VURA</span>
+          <span>PORTFOLIO // 2026</span>
         </div>
       </div>
     ),

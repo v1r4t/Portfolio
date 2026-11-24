@@ -59,9 +59,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
           </span>
         </div>
 
-        <h1 className="detail-title" style={{ color: 'var(--t-blue)', textShadow: '5px 5px 0 var(--t-red)' }}>
-          {meta.title}
-        </h1>
+        <h1 className="blog-heading">{meta.title}</h1>
         <p className="detail-sub" style={{ marginBottom: '2rem' }}>
           {meta.summary}
         </p>
