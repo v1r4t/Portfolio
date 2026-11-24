@@ -1,0 +1,60 @@
+/* TRIM — the print margin layer.
+   Additive: this file, /public/trim-frame.svg and /src/trim.js are the whole
+   feature. Remove their three tags/includes to revert, or load any page with
+   ?bg=off. Nothing below touches the existing palette or layout. */
+
+.trim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Riso screen. Two dot sizes, offset, so it reads as ink on paper rather
+   than a CSS pattern. Dark grounds take paper dots; bright grounds ink. */
+.trim-halftone {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at center, var(--trim-dot) 0.9px, transparent 1.15px),
+    radial-gradient(circle at center, var(--trim-dot) 1.5px, transparent 1.8px);
+  background-size: 6px 6px, 19px 19px;
+  background-position: 0 0, 3px 7px;
+  opacity: 0.42;
+}
+.poster,
+.about { --trim-dot: rgba(255, 248, 231, 0.55); }
+.blogs,
+.projects,
+.contact { --trim-dot: rgba(10, 10, 10, 0.5); }
+
+/* The frame. One floral tile repeated four ways; the middle of the tile is
+   discarded by border-image-slice, so only the band paints. */
+.trim-frame {
+  position: absolute;
+  inset: clamp(4px, 0.5vw, 8px);
+  border: clamp(16px, 2.2vw, 32px) solid transparent;
+  border-image-source: url("/trim-frame.svg");
+  border-image-slice: 40;
+  border-image-width: clamp(16px, 2.2vw, 32px);
+  border-image-repeat: round;
+  opacity: 0.55;
+}
+
+.trim-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.is-revealed .trim {
+    animation: trim-in 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+  }
+  @keyframes trim-in {
+    from { opacity: 0; transform: scale(1.012); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trim { animation: none; }
+}

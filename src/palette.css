@@ -4,7 +4,8 @@
 
 :root {
   /* The cans */
-  --t-pink: #ff2e88;      /* the ground of the poster */
+  --t-violet: #45107a;    /* the ground of the poster */
+  --t-pink: #ff2e88;      /* accent panel and painted fields */
   --t-yellow: #ffd400;    /* chrome yellow, the loudest */
   --t-turquoise: #00b3b0; /* water blue, cool against the pink */
   --t-green: #8cc63f;     /* parrot green */
@@ -14,10 +15,11 @@
   --t-ink: #0a0a0a;       /* the outline on everything */
 
   /* Text pairings — computed on the exact hexes above */
-  --t-text-on-pink: var(--t-ink);      /* ~6.0:1  AA */
-  --t-text-on-yellow: var(--t-ink);    /* ~14:1   AAA */
-  --t-text-on-turquoise: var(--t-ink); /* ~8:1    AA */
-  --t-text-on-blue: var(--t-paper);    /* ~10:1   AAA */
-  --t-text-on-red: var(--t-paper);     /* ~5.2:1  AA */
-  --t-text-on-paper: var(--t-ink);     /* ~19:1   AAA */
+  --t-text-on-violet: var(--t-paper);   /* ~12.3:1 AAA — ink on violet is 1.5:1, never */
+  --t-text-on-pink: var(--t-ink);       /* ~6.0:1  AA */
+  --t-text-on-yellow: var(--t-ink);     /* ~14:1   AAA */
+  --t-text-on-turquoise: var(--t-ink);  /* ~8:1    AA */
+  --t-text-on-blue: var(--t-paper);     /* ~10:1   AAA */
+  --t-text-on-red: var(--t-paper);      /* ~5.2:1  AA */
+  --t-text-on-paper: var(--t-ink);      /* ~19:1   AAA */
 }

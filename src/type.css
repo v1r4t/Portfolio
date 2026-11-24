@@ -1,22 +1,24 @@
-/* TRUCK — three voices, capped.
-   Modak is a poster face: never below 3rem, never body text. */
+/* TRUCK — four voices, capped.
+   Teko is a poster face: never below 2.4rem, never body text. */
 
-@import url('https://fonts.googleapis.com/css2?family=Modak&family=Anek+Devanagari:wght@400;600;700&family=Baloo+Tammudu+2:wght@800&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Modak&family=Teko:wght@400;600;700&family=Anek+Devanagari:wght@400;600;700&family=Baloo+Tammudu+2:wght@800&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500;700&display=swap');
 
 :root {
-  --font-poster: 'Modak', 'Anek Devanagari', cursive;
+  --font-poster: 'Teko', 'Anek Devanagari', sans-serif;
+  --font-glyph: 'Modak', 'Teko', sans-serif;
   --font-deva: 'Anek Devanagari', 'Modak', sans-serif;
   --font-telugu: 'Baloo Tammudu 2', 'Noto Sans Telugu', sans-serif;
   --font-mono: 'Space Mono', 'Courier New', monospace;
   --font-body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* The painted word. Huge, flat, outlined. */
+/* The painted word. Huge, flat, outlined, leaning like it was brushed fast. */
 .s-poster {
   font-family: var(--font-poster);
-  font-weight: 400;
-  line-height: 0.86;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  font-style: oblique 7deg;
+  line-height: 0.95;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--t-yellow, #ffd400);
   -webkit-text-stroke: clamp(2px, 0.4vw, 6px) var(--t-ink, #0a0a0a);

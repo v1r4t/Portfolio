@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Dhruva Vura</title>
     <meta name="description" content="Dhruva Vura — designer and developer. Placeholder portfolio." />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#45107a" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a0a0a'/%3E%3Ctext x='50' y='74' font-size='68' text-anchor='middle' fill='%23ffd400'%3E%E2%9C%BF%3C/text%3E%3C/svg%3E" />
     <link rel="stylesheet" href="/src/palette.css" />
     <link rel="stylesheet" href="/src/type.css" />
+    <link rel="stylesheet" href="/src/trim.css" />
     <style>
       * { box-sizing: border-box; }
 
@@ -16,7 +17,8 @@
         margin: 0;
         height: 100%;
         overflow: hidden;
-        background: var(--t-pink);
+        background: var(--t-violet);
+        transition: background-color 450ms linear;
       }
 
       .poster {
@@ -25,7 +27,7 @@
         height: 100vh;
         height: 100svh;
         overflow: hidden;
-        background: var(--t-pink);
+        background: var(--t-violet);
       }
 
       /* Ink curtain while the poster's assets arrive. */
@@ -124,6 +126,27 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
       }
 
+      /* The dense field. One jaali tile, full bleed, tone-on-tone.
+         White at low opacity lifts whatever ground it sits on, so the
+         same tile is correct on all five panels. */
+      .lattice {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.1;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='120'%20height='120'%20viewBox='0%200%20120%20120'%3E%3Cg%20fill='none'%20stroke='%23ffffff'%20stroke-width='1.7'%20stroke-linejoin='round'%3E%3Cpath%20d='M60%200L120%2060L60%20120L0%2060Z'/%3E%3Cpath%20d='M60%2023L97%2060L60%2097L23%2060Z'/%3E%3Cpath%20d='M60%2043C67%2049%2067%2057%2060%2063C53%2057%2053%2049%2060%2043Z'/%3E%3Cpath%20d='M43%2060C49%2053%2057%2053%2063%2060C57%2067%2049%2067%2043%2060Z'/%3E%3Ccircle%20cx='60'%20cy='0'%20r='3.2'/%3E%3Ccircle%20cx='0'%20cy='60'%20r='3.2'/%3E%3Ccircle%20cx='120'%20cy='60'%20r='3.2'/%3E%3Ccircle%20cx='60'%20cy='120'%20r='3.2'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: 120px 120px;
+      }
+      .panel:not(.poster) .lattice { opacity: 0.16; }
+
+      .panel-art {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+
       /* The mural swings in around the figure as the curtain lifts. */
       body.is-revealed #mural svg {
         transform-origin: 50% 50%;
@@ -167,20 +190,36 @@
 
       /* The cut-out centre piece. The PNG is transparent, so it drops onto
          the paint as a figure, not a rectangle. */
-      .portrait {
+      /* The cut-out centre piece. The PNG is transparent, so it drops onto
+         the paint as a figure, not a rectangle. The wrapper carries the
+         rise so the halftone plate travels with the figure. */
+      .portrait-wrap {
         position: absolute;
         left: 50%;
         bottom: -2%;
         height: min(78vh, 132vw);
-        width: auto;
+        width: fit-content;
         transform: translateX(-50%);
         z-index: 2;
         transform-origin: 50% 100%;
-        filter: drop-shadow(clamp(6px, 0.9vw, 12px) clamp(6px, 0.9vw, 12px) 0 rgba(10, 10, 10, 0.9));
         pointer-events: none;
+      }
+      .portrait {
+        display: block;
+        height: 100%;
+        width: auto;
+        filter: drop-shadow(clamp(6px, 0.9vw, 12px) clamp(6px, 0.9vw, 12px) 0 rgba(10, 10, 10, 0.9));
         user-select: none;
       }
-      body.is-revealed .portrait {
+      /* The dot plate, drawn once from the portrait's own luminance. */
+      .portrait-dots {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        mix-blend-mode: multiply;
+      }
+      body.is-revealed .portrait-wrap {
         animation: portrait-rise 1000ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
       }
       /* Rises out of the fold and overshoots a touch before settling. */
@@ -196,13 +235,15 @@
         top: 50%;
         z-index: 3;
         font-family: var(--font-poster);
-        font-size: clamp(2.4rem, 5.5vw, 6rem);
-        line-height: 0.9;
+        font-style: oblique 7deg;
+        font-weight: 700;
+        font-size: clamp(3rem, 8vw, 9rem);
+        line-height: 0.95;
         white-space: nowrap;
         color: var(--t-yellow);
         -webkit-text-stroke: clamp(1.5px, 0.28vw, 4px) var(--t-ink);
         paint-order: stroke fill;
-        text-shadow: 4px 4px 0 var(--t-ink);
+        text-shadow: 4px 4px 0 var(--t-ink), -7px 5px 0 rgba(0, 179, 176, 0.8);
         pointer-events: none;
       }
       .name-side.left {
@@ -298,7 +339,7 @@
 
       @media (max-width: 700px) {
         .name-side { display: none; }
-        .portrait { height: 72%; }
+        .portrait-wrap { height: 72%; }
         :root { --word-size: clamp(5.25rem, 22vw, 8rem); }
         .top-word { top: 8vh; }
         .wordmark {
@@ -396,12 +437,12 @@
         right: 0;
         bottom: 0;
         z-index: 6;
-        height: 44px;
+        height: 54px;
         display: flex;
         background: var(--t-ink);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 450ms linear;
+        transition: opacity 450ms linear, background-color 450ms linear;
       }
       .road::before {
         content: '';
@@ -411,6 +452,7 @@
         right: 0;
         border-top: 2px dashed var(--t-yellow);
         opacity: 0.7;
+        transition: border-color 450ms linear;
       }
       body.is-road .road { opacity: 1; pointer-events: auto; }
       .stop {
@@ -427,7 +469,7 @@
         text-decoration: none;
         color: var(--t-paper);
         opacity: 0.42;
-        transition: opacity 180ms linear, background 180ms linear;
+        transition: opacity 180ms linear, background 180ms linear, color 180ms linear, border-color 180ms linear;
       }
       .stop:last-child { border-right: 0; }
       .stop:hover,
@@ -441,12 +483,22 @@
         border-radius: 50%;
         background: var(--t-yellow);
       }
+      .road.is-paper { background: var(--t-paper); }
+      .road.is-paper::before { border-top-color: var(--t-ink); opacity: 0.35; }
+      .road.is-paper .stop {
+        color: var(--t-ink);
+        opacity: 0.55;
+        border-right-color: rgba(10, 10, 10, 0.12);
+      }
+      .road.is-paper .stop:hover,
+      .road.is-paper .stop:focus-visible { background: rgba(10, 10, 10, 0.06); }
+      .road.is-paper .stop.is-active::after { background: var(--t-red); }
 
       /* The little lorry. */
       .truck {
         position: fixed;
         left: 10vw;
-        bottom: 44px;
+        bottom: 54px;
         z-index: 7;
         width: 180px;
         opacity: 0;
@@ -481,7 +533,7 @@
         fill: var(--t-ink);
       }
       .truck-svg .truck-flower {
-        font-family: var(--font-poster);
+        font-family: var(--font-glyph);
         font-size: 34px;
         fill: var(--t-yellow);
         stroke: var(--t-ink);
@@ -521,14 +573,15 @@
       .page-title {
         margin: 0;
         font-family: var(--font-poster);
-        font-weight: 400;
-        font-size: clamp(3.4rem, 9vw, 9rem);
-        line-height: 0.82;
+        font-weight: 700;
+        font-style: oblique 7deg;
+        font-size: clamp(4.2rem, 11vw, 11rem);
+        line-height: 0.95;
         text-transform: uppercase;
         color: var(--t-paper);
         -webkit-text-stroke: clamp(2px, 0.35vw, 5px) var(--t-ink);
         paint-order: stroke fill;
-        text-shadow: 5px 5px 0 var(--t-ink);
+        text-shadow: 5px 5px 0 var(--t-ink), -7px 5px 0 rgba(0, 179, 176, 0.75);
         transform: rotate(-2deg);
         transform-origin: left center;
       }
@@ -602,12 +655,25 @@
       .about-img {
         position: relative;
         z-index: 1;
+        display: block;
         height: 100%;
         width: auto;
         max-width: 100%;
-        object-fit: contain;
-        object-position: bottom;
         filter: drop-shadow(6px 6px 0 rgba(10, 10, 10, 0.85));
+      }
+      .about-plate {
+        position: relative;
+        display: block;
+        height: 100%;
+        width: fit-content;
+      }
+      .about-dots {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        mix-blend-mode: multiply;
       }
       .about-figure figcaption {
         margin-top: 1rem;
@@ -713,9 +779,9 @@
       }
       .blog-card:nth-child(2) { transform: rotate(0.35deg); }
       .blog-num {
-        font-family: var(--font-poster);
+        font-family: var(--font-glyph);
         font-size: 2.2rem;
-        line-height: 0.8;
+        line-height: 0.85;
         color: var(--t-red);
       }
       .blog-title {
@@ -757,10 +823,10 @@
       .projects::before {
         content: '';
         position: absolute;
-        top: 6%;
+        top: 22%;
         left: -12%;
         width: 38vw;
-        height: 76%;
+        height: 66%;
         background: var(--t-yellow);
         transform: rotate(-3deg);
         z-index: 0;
@@ -807,9 +873,9 @@
       .cover-b { background: var(--t-turquoise); }
       .cover-c { background: var(--t-red); }
       .cover-num {
-        font-family: var(--font-poster);
+        font-family: var(--font-glyph);
         font-size: clamp(3rem, 5vw, 5rem);
-        line-height: 0.8;
+        line-height: 0.85;
         color: var(--t-ink);
         opacity: 0.9;
       }
@@ -817,6 +883,7 @@
         position: absolute;
         right: 0.8rem;
         bottom: 0.5rem;
+        font-family: var(--font-glyph);
         font-size: clamp(2rem, 4vw, 4rem);
         color: var(--t-paper);
         -webkit-text-stroke: 2px var(--t-ink);
@@ -854,7 +921,7 @@
       }
 
       /* 05 — CONTACT */
-      .contact { background: var(--t-ink); color: var(--t-paper); }
+      .contact { background: var(--t-paper); color: var(--t-ink); }
       .contact::before {
         content: '';
         position: absolute;
@@ -877,8 +944,8 @@
         transform: rotate(-5deg);
         z-index: 0;
       }
-      .contact .page-kicker { color: var(--t-paper); opacity: 0.7; }
-      .contact .page-title { color: var(--t-paper); }
+      .contact .page-kicker { color: var(--t-ink); opacity: 0.7; }
+      .contact .page-title { color: var(--t-red); }
       .contact-body {
         flex: 1;
         display: flex;
@@ -898,8 +965,8 @@
       .contact-email {
         align-self: flex-start;
         padding-bottom: 0.25rem;
-        border-bottom: 4px solid var(--t-yellow);
-        color: var(--t-paper);
+        border-bottom: 4px solid var(--t-red);
+        color: var(--t-ink);
         font-family: var(--font-body);
         font-size: clamp(1.9rem, 5vw, 5.5rem);
         font-weight: 700;
@@ -940,6 +1007,11 @@
         letter-spacing: 0.16em;
         transform: rotate(2deg);
       }
+      .contact .social {
+        border-color: rgba(10, 10, 10, 0.45);
+        color: var(--t-ink);
+      }
+      .contact .horn-sign { border-color: var(--t-ink); }
 
       /* The road on smaller screens. */
       @media (max-width: 900px) {
@@ -960,9 +1032,9 @@
         .blog-card .card-link { grid-column: 3; grid-row: 1 / span 2; }
       }
       @media (max-width: 700px) {
-        .road { height: 36px; }
+        .road { height: 42px; }
         .stop { font-size: 0.42rem; letter-spacing: 0.06em; }
-        .truck { width: 88px; bottom: 36px; }
+        .truck { width: 88px; bottom: 42px; }
         .panel-inner { padding-left: 1.25rem; padding-right: 1.25rem; }
         .project-grid { grid-template-columns: 1fr; }
         .project-card { flex-direction: row; }
@@ -1022,6 +1094,7 @@
     <main class="track" id="track" tabindex="0" aria-label="Portfolio">
       <section class="poster panel" id="home" aria-label="Home">
         <h1 class="sr-only">Dhruva Vura — designer and developer</h1>
+        <div class="lattice" aria-hidden="true"></div>
         <div id="mural"></div>
         <div class="grain"></div>
         <div class="top-word" lang="te">ధ్రువ</div>
@@ -1029,7 +1102,10 @@
         <div class="role">I make noisy signals legible</div>
 
         <div class="name-side left"><span>DHRUVA</span></div>
-        <img class="portrait" src="/potrait.png" alt="Illustrated portrait of Dhruva Vura" draggable="false" />
+        <div class="portrait-wrap">
+          <img class="portrait" src="/potrait.png" alt="Illustrated portrait of Dhruva Vura" draggable="false" />
+          <canvas class="portrait-dots" aria-hidden="true"></canvas>
+        </div>
         <div class="name-side right"><span>VURA</span></div>
 
         <div class="block lotus" aria-hidden="true">✿</div>
@@ -1037,6 +1113,8 @@
       </section>
 
       <section class="panel about" id="about" aria-labelledby="about-title">
+        <div class="lattice" aria-hidden="true"></div>
+        <div class="panel-art" aria-hidden="true"></div>
         <div class="grain"></div>
         <div class="panel-inner">
           <header class="page-head">
@@ -1047,7 +1125,10 @@
           <div class="about-grid">
             <figure class="about-figure">
               <div class="about-frame">
-                <img class="about-img" src="/potrait.png" alt="Portrait of Dhruva Vura" />
+                <span class="about-plate">
+                  <img class="about-img" src="/potrait.png" alt="Portrait of Dhruva Vura" />
+                  <canvas class="about-dots" aria-hidden="true"></canvas>
+                </span>
               </div>
               <figcaption><span class="name-yellow">Dhruva Vura</span> / Designer &amp; developer</figcaption>
             </figure>
@@ -1068,6 +1149,8 @@
       </section>
 
       <section class="panel blogs" id="blogs" aria-labelledby="blogs-title">
+        <div class="lattice" aria-hidden="true"></div>
+        <div class="panel-art" aria-hidden="true"></div>
         <div class="grain"></div>
         <div class="panel-inner">
           <header class="page-head">
@@ -1112,6 +1195,8 @@
       </section>
 
       <section class="panel projects" id="projects" aria-labelledby="projects-title">
+        <div class="lattice" aria-hidden="true"></div>
+        <div class="panel-art" aria-hidden="true"></div>
         <div class="grain"></div>
         <div class="panel-inner">
           <header class="page-head">
@@ -1166,6 +1251,8 @@
       </section>
 
       <section class="panel contact" id="contact" aria-labelledby="contact-title">
+        <div class="lattice" aria-hidden="true"></div>
+        <div class="panel-art" aria-hidden="true"></div>
         <div class="grain"></div>
         <div class="panel-inner">
           <header class="page-head">
@@ -1263,8 +1350,43 @@
       document.body.classList.add('is-locked')
 
       const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+      /* One tonal halftone plate, sampled from the portrait's own pixels.
+         Runs once; the dot screen is what turns the cut-out into print. */
+      function paintDots(img, canvas) {
+        if (!img || !canvas || !img.naturalWidth) return
+        const displayed = img.getBoundingClientRect().width || 600
+        const cols = Math.max(48, Math.min(190, Math.round(displayed / 4.5)))
+        const off = document.createElement('canvas')
+        off.width = cols
+        off.height = Math.max(1, Math.round(cols * img.naturalHeight / img.naturalWidth))
+        const rows = off.height
+        const cell = img.naturalWidth / cols
+        const octx = off.getContext('2d')
+        octx.drawImage(img, 0, 0, cols, rows)
+        let data
+        try { data = octx.getImageData(0, 0, cols, rows).data } catch { return }
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        const ctx = canvas.getContext('2d')
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.72)'
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const i = (y * cols + x) * 4
+            if (data[i + 3] < 110) continue
+            const lum = (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255
+            const dark = 1 - lum
+            if (dark < 0.15) continue
+            const r = (cell / 2) * 1.05 * ((dark - 0.15) / 0.85)
+            ctx.beginPath()
+            ctx.arc((x + 0.5) * cell, (y + 0.5) * cell, Math.max(0.7, r), 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
+      }
+
       const fonts = document.fonts ? document.fonts.ready : Promise.resolve()
-      const image = portrait.decode
+      const decoded = portrait.decode
         ? portrait.decode().catch(() => {})
         : new Promise((resolve) => {
             if (portrait.complete) resolve()
@@ -1273,6 +1395,17 @@
               portrait.addEventListener('error', resolve, { once: true })
             }
           })
+
+      function plateAll() {
+        paintDots(portrait, document.querySelector('.portrait-dots'))
+        const aboutImg = document.querySelector('.about-img')
+        const aboutDots = document.querySelector('.about-dots')
+        if (!aboutImg || !aboutDots) return
+        if (aboutImg.complete) paintDots(aboutImg, aboutDots)
+        else aboutImg.addEventListener('load', () => paintDots(aboutImg, aboutDots), { once: true })
+      }
+
+      const image = decoded.then(plateAll).catch(() => {})
 
       Promise.race([
         Promise.all([fonts, image, wait(reduceMotion ? 0 : 1800)]),
@@ -1336,15 +1469,51 @@
     </script>
 
     <script type="module">
-      import { createMural } from '/src/motifs.js'
+      import { createMural, createPanelArt } from '/src/motifs.js'
+
       createMural(document.getElementById('mural'), { density: 1 })
+
+      /* Same cast, thinned and pushed to the edges of each page. */
+      const PANEL_CAST = {
+        about: [
+          { id: 'm-paisley', x: 0.88, y: 0.55, s: 0.13, rot: 16 },
+          { id: 'm-marigold', x: 0.80, y: 0.86, s: 0.075, rot: 0 },
+          { id: 'm-reel', x: 0.62, y: 0.86, s: 0.07, rot: -8 },
+          { id: 'm-jhumka', x: 0.44, y: 0.90, s: 0.07, rot: -12 },
+        ],
+        blogs: [
+          { id: 'm-kalash', x: 0.09, y: 0.86, s: 0.09, rot: -6 },
+          { id: 'm-cassette', x: 0.62, y: 0.88, s: 0.085, rot: 5 },
+          { id: 'm-jhumka', x: 0.92, y: 0.60, s: 0.09, rot: 12 },
+        ],
+        projects: [
+          { id: 'm-parrot', x: 0.87, y: 0.10, s: 0.085, rot: 8 },
+          { id: 'm-marigold', x: 0.72, y: 0.17, s: 0.06, rot: 0 },
+        ],
+        contact: [
+          { id: 'm-diya', x: 0.42, y: 0.90, s: 0.08, rot: 0 },
+          { id: 'm-marigold', x: 0.72, y: 0.90, s: 0.08, rot: 0 },
+          { id: 'm-paisley', x: 0.56, y: 0.84, s: 0.09, rot: 14 },
+          { id: 'm-reel', x: 0.30, y: 0.70, s: 0.07, rot: 10 },
+        ],
+      }
+
+      for (const [id, cast] of Object.entries(PANEL_CAST)) {
+        const panel = document.getElementById(id)
+        const art = panel && panel.querySelector('.panel-art')
+        if (art) createPanelArt(art, cast)
+      }
     </script>
+
+    <script type="module" src="/src/trim.js"></script>
 
     <script type="module">
       const track = document.getElementById('track')
       const panels = [...track.querySelectorAll('.panel')]
+      const grounds = panels.map((panel) => getComputedStyle(panel).backgroundColor)
       const stops = [...document.querySelectorAll('.stop')]
       const truck = document.getElementById('truck')
+      const road = document.querySelector('.road')
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       let frame = 0
       let driveTimer = 0
@@ -1367,6 +1536,10 @@
           if (active) stop.setAttribute('aria-current', 'page')
           else stop.removeAttribute('aria-current')
         })
+        road.classList.toggle('is-paper', panels[current]?.id === 'contact')
+        const ground = grounds[current] || grounds[0]
+        document.documentElement.style.backgroundColor = ground
+        document.body.style.backgroundColor = ground
 
         truck.classList.add('is-driving')
         clearTimeout(driveTimer)
