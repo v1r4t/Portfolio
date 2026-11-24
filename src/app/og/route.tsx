@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 const size = { width: 1200, height: 630 }
 
-const HEX = /^#[0-9a-f]{3,8}$/i
+const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 const safeColor = (value: string | null, fallback: string) => (value && HEX.test(value) ? value : fallback)
 
 let tekoFont: Promise<ArrayBuffer | null> | null = null
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
   const fonts = teko ? [{ name: 'Teko', data: teko, weight: 700 as const, style: 'normal' as const }] : undefined
   const displayFont = teko ? 'Teko' : 'Arial, sans-serif'
 
-  return new ImageResponse(
+  const image = new ImageResponse(
     (
       <div
         style={{
@@ -127,4 +127,8 @@ export async function GET(request: Request) {
     ),
     { ...size, fonts }
   )
+
+  const headers = new Headers(image.headers)
+  headers.set('Cache-Control', 'public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800')
+  return new Response(image.body, { status: image.status, headers })
 }
