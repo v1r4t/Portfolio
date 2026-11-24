@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Modak&family=Teko:wght@400;600;700&family=Anek+Devanagari:wght@400;600;700&family=Baloo+Tammudu+2:wght@800&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -22,13 +21,13 @@
   --t-text-on-red: var(--t-paper);
   --t-text-on-paper: var(--t-ink);
 
-  /* Fonts */
-  --font-poster: 'Teko', 'Anek Devanagari', sans-serif;
-  --font-glyph: 'Modak', 'Teko', sans-serif;
-  --font-deva: 'Anek Devanagari', 'Modak', sans-serif;
-  --font-telugu: 'Baloo Tammudu 2', 'Noto Sans Telugu', sans-serif;
-  --font-mono: 'Space Mono', 'Courier New', monospace;
-  --font-body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  /* Fonts — families injected by next/font in app/layout.tsx */
+  --font-poster: var(--font-teko), 'Teko', 'Anek Devanagari', sans-serif;
+  --font-glyph: var(--font-modak), 'Modak', 'Teko', sans-serif;
+  --font-deva: var(--font-anek), 'Anek Devanagari', 'Modak', sans-serif;
+  --font-telugu: var(--font-baloo), 'Baloo Tammudu 2', 'Noto Sans Telugu', sans-serif;
+  --font-mono: var(--font-spacemono), 'Space Mono', 'Courier New', monospace;
+  --font-body: var(--font-barlow), 'Barlow', 'Helvetica Neue', Arial, sans-serif;
 
   --word-size: clamp(4.5rem, 15vw, 11rem);
 }
@@ -1135,4 +1134,33 @@ html, body {
   .stop { font-size: 0.45rem; letter-spacing: 0.08em; }
   .truck { width: 92px; bottom: 44px; }
   .project-grid { grid-template-columns: 1fr; }
+}
+
+/* ——— BOOT PLACEHOLDER (removed when the journey lands) ——— */
+.boot {
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  text-align: center;
+}
+.boot-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--t-yellow);
+}
+.boot-title {
+  margin: 0;
+  font-family: var(--font-poster);
+  font-weight: 700;
+  font-style: oblique 7deg;
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.95;
+  color: var(--t-yellow);
+  -webkit-text-stroke: 4px var(--t-ink);
+  paint-order: stroke fill;
+  text-shadow: 5px 5px 0 var(--t-ink);
 }

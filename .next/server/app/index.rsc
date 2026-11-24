@@ -1,0 +1,29 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/3qfy96eoyh-ek.js"
+3:I[39756,["$2"],"default"]
+4:I[37457,["$2"],"default"]
+6:I[97367,["$2"],"OutletBoundary"]
+7:"$Sreact.suspense"
+9:"ViewportBoundary"
+a:I[97367,["$2"],"$9"]
+c:"MetadataBoundary"
+d:I[97367,["$2"],"$c"]
+f:I[68027,["$2"],"default",1]
+:HL["/_next/static/chunks/0xzfofc_kbtuk.css","style"]
+:HL["/_next/static/media/14c9dcfc1e98a47a-s.p.3xrrlhtwjwb_3.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/34c58fc38e31639a-s.p.1s123piy9_v1m.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/47f2a52baa6b239e-s.p.3j_1nz5r9--0j.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/5016fbdfc634340b-s.p.2lpos000q_nzo.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/8d472e246568d62d-s.p.22ggkaf3lyu8c.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/ab56636924653a94-s.p.3cik_s2si-ft-.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/b5363c3b0545cfa1-s.p.0s4utfvp8prsy.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/c52d0a8a47055bb1-s.p.2p4adm_386h58.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/caff7cd203548669-s.p.44ggz8q6qt7y3.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/d95dd2de5c0b91c3-s.p.1b96pxcrbgzyb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/f8eebd6890aa82a7-s.p.29qa1225fo-xv.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/ff26aa9d126a0bdf-s.p.3g2nb-dki5zne.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+5:[["children",{"s":"__PAGE__","h":512,"d":{"r":["$","$1","c",{"children":[["$","main",null,{"className":"boot","children":[["$","p",null,{"className":"boot-kicker","children":"NH-44 // REBUILD IN PROGRESS"}],["$","h1",null,{"className":"boot-title","children":"HORN OK PLEASE"}]]}],null,["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"p":false,"v":null}}]]
+0:{"P":null,"c":["",""],"q":"","i":false,"t":{"t":{"s":"","h":528,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0xzfofc_kbtuk.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/3qfy96eoyh-ek.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"en","className":"BKBsqq_variable yRMiEG_variable h80mnG_variable lsjzvq_variable QhoeMq_variable K5-r2W_variable","children":["$","body",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],"p":false,"v":null},"c":"$Q5"},"h":{"r":["$","$1","h",{"children":[null,["$","$La",null,{"children":"$Lb"}],["$","$Ld",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$7",null,{"name":"Next.Metadata","children":"$Le"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":false,"v":null}},"m":"$undefined","G":["$f",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0xzfofc_kbtuk.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"mgBIcBrdywXzOUfojt-Wn"}
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#45107a"}]]
+8:null
+e:[["$","title","0",{"children":"Dhruva Vura — Designer & Creative Engineer"}],["$","meta","1",{"name":"description","content":"Dhruva Vura — portfolio fusing authentic Indian highway truck art and high-performance web engineering."}],["$","meta","2",{"property":"og:title","content":"Dhruva Vura — Designer & Creative Engineer"}],["$","meta","3",{"property":"og:description","content":"Dhruva Vura — portfolio fusing authentic Indian highway truck art and high-performance web engineering."}],["$","meta","4",{"property":"og:site_name","content":"Dhruva Vura"}],["$","meta","5",{"property":"og:locale","content":"en_IN"}],["$","meta","6",{"property":"og:type","content":"website"}],["$","meta","7",{"name":"twitter:card","content":"summary"}],["$","meta","8",{"name":"twitter:title","content":"Dhruva Vura — Designer & Creative Engineer"}],["$","meta","9",{"name":"twitter:description","content":"Dhruva Vura — portfolio fusing authentic Indian highway truck art and high-performance web engineering."}]]
