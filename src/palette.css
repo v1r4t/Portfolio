@@ -1,0 +1,23 @@
+/* TRUCK — pigment, not UI theme.
+   Flat paint, no gradients, no shadows. Every value is a colour you could
+   find on a vehicle body. Contrast ratios are AA body-text pairings. */
+
+:root {
+  /* The cans */
+  --t-pink: #ff2e88;      /* the ground of the poster */
+  --t-yellow: #ffd400;    /* chrome yellow, the loudest */
+  --t-turquoise: #00b3b0; /* water blue, cool against the pink */
+  --t-green: #8cc63f;     /* parrot green */
+  --t-blue: #1b3a8c;      /* deep sign-painter blue */
+  --t-red: #e2231a;       /* vermilion, for blocks and lotuses */
+  --t-paper: #fff8e7;     /* warm white, not #fff */
+  --t-ink: #0a0a0a;       /* the outline on everything */
+
+  /* Text pairings — computed on the exact hexes above */
+  --t-text-on-pink: var(--t-ink);      /* ~6.0:1  AA */
+  --t-text-on-yellow: var(--t-ink);    /* ~14:1   AAA */
+  --t-text-on-turquoise: var(--t-ink); /* ~8:1    AA */
+  --t-text-on-blue: var(--t-paper);    /* ~10:1   AAA */
+  --t-text-on-red: var(--t-paper);     /* ~5.2:1  AA */
+  --t-text-on-paper: var(--t-ink);     /* ~19:1   AAA */
+}

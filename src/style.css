@@ -1,0 +1,13 @@
+/* Blank slate. No tokens, no palette, no type system — those are decisions. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
