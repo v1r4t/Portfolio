@@ -21,7 +21,7 @@ export const ContactPanel: React.FC = React.memo(function ContactPanel() {
     <section className="panel contact" id="contact" aria-labelledby="contact-title">
       <PanelArt variant="contact" />
 
-      <div className="panel-inner">
+      <div className="panel-inner" data-lenis-prevent-vertical>
         <header className="page-head">
           <span className="page-kicker">05 / Contact</span>
           <h2 className="page-title" id="contact-title" data-reveal>

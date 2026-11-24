@@ -20,7 +20,7 @@ export const ProjectsPanel: React.FC<{ projects: Project[] }> = React.memo(funct
     <section className="panel projects" id="projects" aria-labelledby="projects-title">
       <PanelArt variant="projects" />
 
-      <div className="panel-inner">
+      <div className="panel-inner" data-lenis-prevent-vertical>
         <header className="page-head">
           <span className="page-kicker">04 / Projects</span>
           <h2 className="page-title" id="projects-title" data-reveal>

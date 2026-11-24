@@ -11,7 +11,7 @@ export const BlogsPanel: React.FC<{ posts: PostMeta[] }> = React.memo(function B
     <section className="panel blogs" id="blogs" aria-labelledby="blogs-title">
       <PanelArt variant="blogs" />
 
-      <div className="panel-inner">
+      <div className="panel-inner" data-lenis-prevent-vertical>
         <header className="page-head">
           <span className="page-kicker">03 / Blogs</span>
           <h2 className="page-title" id="blogs-title" data-reveal>

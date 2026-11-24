@@ -198,3 +198,9 @@ mobile WebGL) both pass with zero page errors.
 Known trade-offs: one fullscreen shader (cheap, no loops) instead of per-panel CSS gradients;
 Lenis native touch retained (`syncTouch: false`) with snap on idle; custom cursor disabled on
 coarse pointers and reduced motion.
+
+GLM-5.3 review round 3 verdict: SHIP. Pre-deploy one-liners landed: CSS snap restored for
+reduced-motion users, `.journey` transparent so a lost WebGL context degrades to the synced
+body pigment (never ink-on-violet), horn glow switched from blur to dot geometry. Also fixed:
+idle ink-trail rAF, Safari analyser guard, `data-lenis-prevent-vertical` on mobile inner
+scrollers, and no more destination pre-flash during smooth drives.

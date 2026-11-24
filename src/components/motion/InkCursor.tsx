@@ -39,8 +39,14 @@ export function InkCursor() {
     type Point = { x: number; y: number; life: number; size: number }
     const points: Point[] = []
     let raf = 0
+    let running = false
 
     const drawTrail = () => {
+      if (points.length === 0) {
+        running = false
+        ctx.clearRect(0, 0, width, height)
+        return
+      }
       ctx.clearRect(0, 0, width, height)
       for (let i = points.length - 1; i >= 0; i--) {
         const p = points[i]
@@ -56,7 +62,12 @@ export function InkCursor() {
       }
       raf = requestAnimationFrame(drawTrail)
     }
-    raf = requestAnimationFrame(drawTrail)
+
+    const startTrail = () => {
+      if (running) return
+      running = true
+      raf = requestAnimationFrame(drawTrail)
+    }
 
     const onMove = (event: PointerEvent) => {
       if (!revealed) {
@@ -67,6 +78,7 @@ export function InkCursor() {
       yTo(event.clientY)
       points.push({ x: event.clientX, y: event.clientY, life: 1, size: 5 + Math.random() * 7 })
       if (points.length > 40) points.shift()
+      startTrail()
     }
 
     const onOver = (event: PointerEvent) => {

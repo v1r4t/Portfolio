@@ -54,6 +54,7 @@ class HornAudioEngine {
   /** Normalized 0..1 RMS of the last analyser frame. */
   public getLevel(): number {
     if (!this.analyser || !this.waveform) return 0
+    if (typeof this.analyser.getFloatTimeDomainData !== 'function') return 0
     this.analyser.getFloatTimeDomainData(this.waveform)
     let sum = 0
     for (let i = 0; i < this.waveform.length; i++) {

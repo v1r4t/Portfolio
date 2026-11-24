@@ -98,7 +98,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       currentIndexRef.current = targetIndex
       setCurrentStopIndex(targetIndex)
       programmaticUntilRef.current = Date.now() + 1400
-      applyScroll(target)
+      if (immediate) applyScroll(target)
 
       if (lenisRef.current && !immediate) {
         lenisRef.current.scrollTo(target, { duration: 1.1, easing: easeOutCubic })

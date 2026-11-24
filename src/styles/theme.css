@@ -1160,7 +1160,7 @@ html, body {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: var(--t-violet);
+  background: transparent;
   isolation: isolate;
 }
 .paint-canvas {
@@ -1648,7 +1648,8 @@ a.project-card {
   filter: brightness(calc(1 + var(--horn-level, 0) * 1.7));
 }
 .stop.is-active::after {
-  box-shadow: 0 0 calc(var(--horn-level, 0) * 16px) var(--t-yellow);
+  transform: scale(calc(1 + var(--horn-level, 0) * 0.9));
+  transition: transform 80ms linear;
 }
 
 /* ——— Detail pages (projects / blog) ——— */
@@ -1953,7 +1954,10 @@ a.project-card {
 
 /* Reduced motion: kill decorative loops, keep everything visible */
 @media (prefers-reduced-motion: reduce) {
-  .track { scroll-behavior: auto; }
+  .track {
+    scroll-behavior: auto;
+    scroll-snap-type: x mandatory;
+  }
   .bulb-strip,
   .marquee-track,
   .truck.is-driving .puff,

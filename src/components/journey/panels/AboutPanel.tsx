@@ -60,7 +60,7 @@ export const AboutPanel: React.FC = React.memo(function AboutPanel() {
       <div className="painted-band band-left" aria-hidden="true" />
       <div className="painted-band band-right" aria-hidden="true" />
 
-      <div className="panel-inner">
+      <div className="panel-inner" data-lenis-prevent-vertical>
         <header className="page-head">
           <span className="page-kicker">02 / About</span>
           <h2 className="page-title" id="about-title" data-reveal>
