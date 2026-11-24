@@ -4,7 +4,7 @@ import React, { useRef } from 'react'
 import { PanelArt } from '../../art/PanelArt'
 import { PermitStamp } from '../../art/Ornaments'
 
-export const AboutPanel: React.FC = () => {
+export const AboutPanel: React.FC = React.memo(function AboutPanel() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const imgRef = useRef<HTMLImageElement | null>(null)
 
@@ -126,4 +126,6 @@ export const AboutPanel: React.FC = () => {
       </div>
     </section>
   )
-}
+})
+
+

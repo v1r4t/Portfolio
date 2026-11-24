@@ -13,7 +13,7 @@ const COVER_SYMBOLS: Record<Project['coverPattern'], string> = {
   hazard: 'm-star',
 }
 
-export const ProjectsPanel: React.FC<{ projects: Project[] }> = ({ projects }) => {
+export const ProjectsPanel: React.FC<{ projects: Project[] }> = React.memo(function ProjectsPanel({ projects }) {
   const coverClasses = ['cover-a', 'cover-b', 'cover-c']
 
   return (
@@ -61,4 +61,4 @@ export const ProjectsPanel: React.FC<{ projects: Project[] }> = ({ projects }) =
       </div>
     </section>
   )
-}
+})

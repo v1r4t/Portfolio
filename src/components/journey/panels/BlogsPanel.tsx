@@ -6,7 +6,7 @@ import type { PostMeta } from '../../../types'
 import { PanelArt } from '../../art/PanelArt'
 import { BarcodeStrip, Marquee } from '../../art/Ornaments'
 
-export const BlogsPanel: React.FC<{ posts: PostMeta[] }> = ({ posts }) => {
+export const BlogsPanel: React.FC<{ posts: PostMeta[] }> = React.memo(function BlogsPanel({ posts }) {
   return (
     <section className="panel blogs" id="blogs" aria-labelledby="blogs-title">
       <PanelArt variant="blogs" />
@@ -49,4 +49,6 @@ export const BlogsPanel: React.FC<{ posts: PostMeta[] }> = ({ posts }) => {
       </div>
     </section>
   )
-}
+})
+
+

@@ -6,7 +6,7 @@ import { hornAudio } from '../../../utils/audio'
 import { PanelArt } from '../../art/PanelArt'
 import { BarcodeStrip, BulbChain } from '../../art/Ornaments'
 
-export const ContactPanel: React.FC = () => {
+export const ContactPanel: React.FC = React.memo(function ContactPanel() {
   const handleHornClick = () => {
     hornAudio.playHorn('melody')
     confetti({
@@ -63,4 +63,6 @@ export const ContactPanel: React.FC = () => {
       </div>
     </section>
   )
-}
+})
+
+

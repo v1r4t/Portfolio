@@ -33,6 +33,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
   const lenisRef = useRef<Lenis | null>(null)
   const currentIndexRef = useRef(0)
   const programmaticUntilRef = useRef(0)
+  const lastProgressRef = useRef(-1)
 
   const [currentStopIndex, setCurrentStopIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -57,7 +58,10 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       const width = track.clientWidth
       const maxScroll = track.scrollWidth - width
       const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollLeft / maxScroll)) : 0
-      setScrollProgress(progress)
+      if (Math.abs(progress - lastProgressRef.current) > 0.0004) {
+        lastProgressRef.current = progress
+        setScrollProgress(progress)
+      }
 
       const activeIndex = Math.max(0, Math.min(stops.length - 1, Math.round(scrollLeft / width)))
       const isProgrammatic = Date.now() < programmaticUntilRef.current
@@ -266,6 +270,8 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     }
   }, [currentStopIndex])
 
+  const handleExplore = useCallback(() => scrollToStop(1), [scrollToStop])
+
   return (
     <div className="journey">
       <PaintCanvas progress={scrollProgress} stops={stops} />
@@ -281,7 +287,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       >
         <div className="track-inner" ref={innerRef}>
           <div className="panel-slot" ref={(el) => { panelRefs.current[0] = el }}>
-            <HeroPoster onExploreClick={() => scrollToStop(1)} />
+            <HeroPoster onExploreClick={handleExplore} />
           </div>
           <div className="panel-slot" ref={(el) => { panelRefs.current[1] = el }}>
             <AboutPanel />
