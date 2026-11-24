@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { PROJECTS, getProject } from '@/data/portfolio'
 import { createPageMetadata } from '@/lib/metadata'
 import { SmoothScroll } from '@/components/SmoothScroll'
+import { ChevronBand, CornerCluster } from '@/components/art/Ornaments'
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -53,6 +54,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           } as React.CSSProperties
         }
       >
+        <CornerCluster corner="tr" />
+        <ChevronBand className="chevrons-bottom" flip />
         <span className="detail-kicker">
           {project.category} / {project.year}
         </span>

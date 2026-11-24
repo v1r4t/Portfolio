@@ -28,7 +28,7 @@ const browser = await chromium.launch()
   const { context, page } = await openPage(browser, { url: `${BASE}/`, viewport: { width: 1440, height: 900 } })
   const vw = await page.evaluate(() => window.innerWidth)
 
-  results.panelCount = await page.locator('.panel').count()
+  results.panelCount = await page.locator('.panel-slot').count()
   results.trackScrollWidth = await page.evaluate(() => document.querySelector('.track')?.scrollWidth)
   results.expectedScrollWidth = vw * 5
 
@@ -93,7 +93,7 @@ const browser = await chromium.launch()
     url: `${BASE}/`,
     viewport: { width: 390, height: 844 },
   })
-  results.mobilePanelCount = await page.locator('.panel').count()
+  results.mobilePanelCount = await page.locator('.panel-slot').count()
   results.mobileBodyOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)
   results.mobileCurtainGone = await page.evaluate(() => !document.querySelector('.load'))
   await page.screenshot({ path: path.join(OUT, 'mobile-home.png') })

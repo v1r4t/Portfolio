@@ -119,7 +119,6 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
       }, 250)
       return () => clearTimeout(t)
     }
-
     let flightTween: gsap.core.Tween | null = null
     let revealTimer: ReturnType<typeof setTimeout> | null = null
 

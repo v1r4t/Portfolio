@@ -5,6 +5,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { getAllPosts, getPost, getPostSlugs } from '@/lib/posts'
 import { createPageMetadata } from '@/lib/metadata'
 import { SmoothScroll } from '@/components/SmoothScroll'
+import { BarcodeStrip, Marquee } from '@/components/art/Ornaments'
 
 interface BlogPageProps {
   params: Promise<{ slug: string }>
@@ -63,6 +64,9 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <p className="detail-sub" style={{ marginBottom: '2rem' }}>
           {meta.summary}
         </p>
+
+        <Marquee text="ROUTE DISPATCH ✦ HORN OK PLEASE ✦ NH-44" />
+        <BarcodeStrip className="blog-lead-barcode" />
 
         <div className="prose">
           <MDXRemote source={content} />

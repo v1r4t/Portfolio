@@ -1123,7 +1123,6 @@ html, body {
     padding-bottom: 150px;
     overflow-y: auto;
     overscroll-behavior: contain;
-    touch-action: pan-y;
     scrollbar-width: none;
   }
   .panel-inner::-webkit-scrollbar { display: none; }
@@ -1346,11 +1345,11 @@ html, body {
 .permit-stamp {
   position: absolute;
   z-index: 1;
-  width: clamp(88px, 9vw, 132px);
+  width: clamp(96px, 10vw, 140px);
   height: auto;
   pointer-events: none;
   color: var(--t-ink);
-  opacity: 0.5;
+  opacity: 0.62;
 }
 .stamp-about { right: 9%; top: 22%; transform: rotate(9deg); color: var(--t-paper); opacity: 0.6; }
 .stamp-blogs { right: 7%; top: 16%; transform: rotate(-7deg); }
@@ -1669,6 +1668,13 @@ a.project-card {
   line-height: 1.5;
   font-weight: 500;
 }
+.detail-hero .corner-cluster {
+  width: clamp(110px, 12vw, 180px);
+  opacity: 0.92;
+}
+.detail-hero .chevrons-bottom {
+  bottom: 6px;
+}
 .detail-body {
   max-width: 1080px;
   margin: 0 auto;
@@ -1809,6 +1815,12 @@ a.project-card {
   transform: rotate(-0.4deg);
 }
 .permit-header b { color: var(--t-yellow); }
+.blog-lead-barcode {
+  width: min(240px, 50%);
+  height: 14px;
+  margin: 0.4rem 0 1.6rem;
+  opacity: 0.5;
+}
 .prose p {
   margin: 0 0 1.4rem;
   font-size: clamp(1.02rem, 1.25vw, 1.15rem);
