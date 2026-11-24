@@ -8,6 +8,7 @@ import {
   Teko,
 } from 'next/font/google'
 import { MotifDefs } from '@/components/art/MotifDefs'
+import { SITE_URL } from '@/lib/site'
 import '../styles/theme.css'
 
 const teko = Teko({
@@ -46,8 +47,6 @@ const barlow = Barlow({
   variable: '--font-barlow',
   display: 'swap',
 })
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -1,15 +1,45 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'Dhruva Vura — truck-art poster'
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
+const size = { width: 1200, height: 630 }
+
+const HEX = /^#[0-9a-f]{3,8}$/i
+const safeColor = (value: string | null, fallback: string) => (value && HEX.test(value) ? value : fallback)
+
+let tekoFont: Promise<ArrayBuffer | null> | null = null
+
+/** Teko 700 as TTF for satori; fails soft to system sans. */
+function loadTeko(): Promise<ArrayBuffer | null> {
+  if (!tekoFont) {
+    tekoFont = (async () => {
+      try {
+        const css = await fetch('https://fonts.googleapis.com/css2?family=Teko:wght@700&display=swap', {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36',
+          },
+          next: { revalidate: 86400 },
+        }).then((res) => res.text())
+        const url = /url\((https:\/\/[^)]+)\)/.exec(css)?.[1]
+        if (!url || url.endsWith('.woff2')) return null
+        return await fetch(url).then((res) => res.arrayBuffer())
+      } catch {
+        return null
+      }
+    })()
+  }
+  return tekoFont
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const title = (searchParams.get('title') ?? 'Dhruva Vura').slice(0, 90)
   const sub = (searchParams.get('sub') ?? 'Designer & Creative Engineer').slice(0, 120)
-  const bg = searchParams.get('bg') ?? '#45107a'
-  const accent = searchParams.get('accent') ?? '#ffd400'
+  const bg = safeColor(searchParams.get('bg'), '#45107a')
+  const accent = safeColor(searchParams.get('accent'), '#ffd400')
+
+  const teko = await loadTeko()
+  const fonts = teko ? [{ name: 'Teko', data: teko, weight: 700 as const, style: 'normal' as const }] : undefined
+  const displayFont = teko ? 'Teko' : 'Arial, sans-serif'
 
   return new ImageResponse(
     (
@@ -67,11 +97,12 @@ export async function GET(request: Request) {
         >
           <div
             style={{
-              fontSize: title.length > 40 ? 62 : 82,
-              fontWeight: 900,
-              lineHeight: 0.95,
+              fontFamily: displayFont,
+              fontSize: teko ? (title.length > 40 ? 74 : 104) : title.length > 40 ? 62 : 82,
+              fontWeight: 700,
+              lineHeight: 0.96,
               textTransform: 'uppercase',
-              letterSpacing: -1.5,
+              letterSpacing: teko ? 0 : -1.5,
             }}
           >
             {title}
@@ -94,6 +125,6 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   )
 }

@@ -24,6 +24,11 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
     throw new Error(`Blog post "${filename}" has incomplete permitMeta: ${missingPermits.join(', ')}`)
   }
 
+  const order = Number(data.order)
+  if (!Number.isFinite(order)) {
+    throw new Error(`Blog post "${filename}" has a non-numeric order: ${String(data.order)}`)
+  }
+
   return {
     meta: {
       slug,
@@ -32,7 +37,7 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
       readTime: String(data.readTime),
       summary: String(data.summary),
       tags: (data.tags as string[]) ?? [],
-      order: Number(data.order),
+      order,
       permitMeta: {
         transitNo: String(permits!.transitNo),
         origin: String(permits!.origin),
@@ -45,7 +50,9 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
 }
 
 export function getAllPosts(): PostMeta[] {
-  if (!fs.existsSync(BLOG_DIR)) return []
+  if (!fs.existsSync(BLOG_DIR)) {
+    throw new Error(`Blog content directory missing: ${BLOG_DIR}`)
+  }
   return fs
     .readdirSync(BLOG_DIR)
     .filter((file) => file.endsWith('.mdx'))
@@ -58,6 +65,7 @@ export function getPostSlugs(): string[] {
 }
 
 export function getPost(slug: string) {
+  if (!/^[a-z0-9-]+$/i.test(slug)) return null
   const file = `${slug}.mdx`
   if (!fs.existsSync(path.join(BLOG_DIR, file))) return null
   return parsePostFile(file)

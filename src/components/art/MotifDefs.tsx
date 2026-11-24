@@ -171,7 +171,7 @@ export const MotifDefs = () => {
         {/* Diya Lamp */}
         <symbol id="m-diya" viewBox="0 0 120 90">
           <g stroke="#0a0a0a" strokeWidth="3" strokeLinejoin="round">
-            <path d="M60 10 Q74 28 67 40 Q63 50 53 42 Q45 32 60 10Z" fill="#ff9f1c" />
+            <path d="M60 10 Q74 28 67 40 Q63 50 53 42 Q45 32 60 10Z" fill="#e2231a" />
             <path d="M16 52 Q60 44 104 52 Q102 60 94 64 Q60 76 26 64 Q18 60 16 52Z" fill="#ffd400" />
             <circle cx="60" cy="40" r="5" fill="#fff8e7" />
           </g>
@@ -202,7 +202,7 @@ export const MotifDefs = () => {
               <g key={angle} transform={`rotate(${angle})`}>
                 <use href="#m-chilli-pod" fill="#fff8e7" stroke="#fff8e7" strokeWidth="8" />
                 <use href="#m-chilli-cal" fill="#fff8e7" stroke="#fff8e7" strokeWidth="7" />
-                <use href="#m-chilli-pod" fill="#cf1d15" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
+                <use href="#m-chilli-pod" fill="#e2231a" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
                 <use href="#m-chilli-cal" fill="#8cc63f" stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round" />
                 <path d="M2 24 C-5 58 -5 106 2 136" fill="none" stroke="#fff8e7" strokeWidth="2.2" opacity="0.35" />
               </g>
@@ -216,7 +216,7 @@ export const MotifDefs = () => {
         <symbol id="m-bulb" viewBox="0 0 48 72">
           <g stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round">
             <rect x="17" y="34" width="14" height="10" rx="2" fill="#1b3a8c" />
-            <path d="M20 44 L20 50 L28 50 L28 44" fill="#8c8c8c" />
+            <path d="M20 44 L20 50 L28 50 L28 44" fill="#0a0a0a" />
             <circle cx="24" cy="22" r="16" fill="#ffd400" />
             <path d="M19 22 Q24 15 29 22" fill="none" strokeWidth="1.8" />
             <path d="M19 26 Q24 19 29 26" fill="none" strokeWidth="1.8" />

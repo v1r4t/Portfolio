@@ -40,9 +40,11 @@ export const BlogsPanel: React.FC<{ posts: PostMeta[] }> = ({ posts }) => {
         </div>
 
         <div className="blog-foot">
-          <Link className="all-link" href={`/blog/${posts[0]?.slug ?? ''}`}>
-            Latest dispatch →
-          </Link>
+          {posts[0] && (
+            <Link className="all-link" href={`/blog/${posts[0].slug}`}>
+              Latest dispatch →
+            </Link>
+          )}
         </div>
       </div>
     </section>

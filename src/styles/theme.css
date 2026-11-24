@@ -1174,6 +1174,10 @@ html, body {
   outline: none;
 }
 .track::-webkit-scrollbar { display: none; }
+.track:focus-visible {
+  outline: 3px solid var(--t-yellow);
+  outline-offset: -3px;
+}
 .panel-slot {
   flex: 0 0 100vw;
   width: 100vw;
@@ -1406,7 +1410,7 @@ html, body {
   overflow: hidden;
   background: var(--t-ink);
   border: 2px solid var(--t-ink);
-  box-shadow: 4px 4px 0 rgba(10, 10, 10, 0.35);
+  box-shadow: 4px 4px 0 var(--t-ink);
   transform: rotate(-0.35deg);
   margin: 0 0 1rem;
   flex: none;
@@ -1712,7 +1716,7 @@ a.project-card {
 .case-block h2,
 .blog-body h2 {
   font-family: var(--font-poster);
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
   line-height: 1;
   text-transform: uppercase;
   font-style: oblique 7deg;
@@ -1760,7 +1764,7 @@ a.project-card {
 .metric-tile strong {
   display: block;
   font-family: var(--font-poster);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-size: clamp(2.4rem, 3vw, 2.8rem);
   line-height: 1;
 }
 .metric-tile span {
@@ -1885,9 +1889,15 @@ a.project-card {
   .bulb-strip,
   .marquee-track,
   .truck.is-driving .puff,
-  .truck.is-driving .truck-bounce {
+  .truck.is-driving .truck-bounce,
+  .load-meter i {
     animation: none !important;
   }
+  .truck.is-in .truck-arrival {
+    animation: none !important;
+    transform: none !important;
+  }
+  .load { transition: none !important; }
   .mural-wrap svg,
   .portrait-wrap,
   .name-side.left span,

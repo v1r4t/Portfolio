@@ -32,6 +32,7 @@ export const NavigationRoad: React.FC<NavigationRoadProps> = ({
         className={`road ${isRoadReady ? 'is-road' : ''} ${isPaper ? 'is-paper' : ''}`}
         role="navigation"
         aria-label="Sections"
+        aria-hidden={!isRoadReady}
         style={{ opacity: isRoadReady ? 1 : 0, pointerEvents: isRoadReady ? 'auto' : 'none' }}
       >
         {NAV_STOPS.map((stop, index) => {
@@ -40,6 +41,7 @@ export const NavigationRoad: React.FC<NavigationRoadProps> = ({
             <a
               key={stop.id}
               href={`#${stop.id}`}
+              tabIndex={isRoadReady ? 0 : -1}
               onClick={(e) => {
                 e.preventDefault()
                 onSelectStop(index)

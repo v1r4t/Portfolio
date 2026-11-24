@@ -65,7 +65,13 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
 
     setIsDriving(true)
     if (drivingTimeoutRef.current) clearTimeout(drivingTimeoutRef.current)
-    drivingTimeoutRef.current = window.setTimeout(() => setIsDriving(false), 180)
+    drivingTimeoutRef.current = window.setTimeout(() => {
+      setIsDriving(false)
+      const stop = stops[activeIndex]
+      if (stop && window.location.hash !== `#${stop.id}`) {
+        history.replaceState(null, '', `#${stop.id}`)
+      }
+    }, 180)
   }, [stops])
 
   useEffect(() => {
@@ -108,7 +114,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
 
   // GSAP entrance choreography for the active panel
   useEffect(() => {
-    if (reducedMotion) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const panel = panelRefs.current[currentStopIndex]
     if (!panel) return
 

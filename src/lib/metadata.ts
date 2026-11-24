@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+import { SITE_URL } from './site'
 
 export function ogImageUrl(params: { title: string; sub?: string; bg?: string; accent?: string }) {
   const search = new URLSearchParams({ title: params.title })

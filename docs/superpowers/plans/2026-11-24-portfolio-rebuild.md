@@ -148,3 +148,24 @@ content/blog/*.mdx
 - [ ] Keyboard + hash-anchor pass (`/#projects`).
 - [ ] Review subagent on `opencode-go/glm-5.3`: diff review vs spec + design.md; fix findings; re-run build; repeat until clean.
 - [ ] Final commit `feat: complete next.js painted-lorry rebuild`.
+
+---
+
+## Completion record — 2026-11-24
+
+All tasks implemented. Build: 13 routes (9 static, 3 SSG, `/og` dynamic). `scripts/verify.mjs`
+asserts: 5 panels, track = 5×viewport, hash restore exact (`vw*3`), keyboard exact, overlay
+pointer leaks none, reduced-motion curtain lifts, mobile no overflow, zero console errors.
+
+GLM-5.3 review round 1 findings: H1 fixed (SITE_URL resolves from `SITE_URL` /
+`NEXT_PUBLIC_SITE_URL` / `VERCEL_PROJECT_PRODUCTION_URL`); M1 fixed (hash written on scroll
+settle); M2 fixed (curtain skipped on soft return / non-home deep link via sessionStorage +
+hash); M3 fixed (`dynamicParams = false`, slug sanitized); M4 fixed (track focus ring);
+M5 fixed (OG fetches Teko 700 as TTF, soft fallback); M6 fixed (missing blog dir throws,
+`order` validated); M7 fixed (Teko floors raised to 2.4rem); M8 fixed (off-palette hexes
+replaced); L1/L3/L6/L7/L8/L9/L12/L13 addressed.
+
+Remaining and deliberate: real social profile URLs still placeholders (owner input needed);
+`next/image` not used for the cutout portrait plates (halftone canvas overlay); Lenis is on
+reading pages only, not the snap track (tool limitation: capture tool cannot verify multiple
+inner scrollers); plus mundane post-ship items noted in review.

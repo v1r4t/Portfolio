@@ -110,15 +110,29 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    if (reduced) {
-      const t = setTimeout(() => {
-        setCurtainReady(true)
-        setCurtainGone(true)
-        setIsRevealed(true)
-        setIsLanded(true)
-      }, 250)
-      return () => clearTimeout(t)
+    const alreadyPasted = (() => {
+      try {
+        return sessionStorage.getItem('poster-pasted') === '1'
+      } catch {
+        return false
+      }
+    })()
+    const hashTarget = window.location.hash
+    const landingElsewhere = hashTarget.length > 1 && hashTarget !== '#home'
+
+    if (reduced || alreadyPasted || landingElsewhere) {
+      setCurtainReady(true)
+      setCurtainGone(true)
+      setIsRevealed(true)
+      setIsLanded(true)
+      try {
+        sessionStorage.setItem('poster-pasted', '1')
+      } catch {
+        /* private mode */
+      }
+      return
     }
+
     let flightTween: gsap.core.Tween | null = null
     let revealTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -144,7 +158,14 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
             y: dy,
             duration: 0.9,
             ease: 'power3.inOut',
-            onComplete: () => setIsLanded(true),
+            onComplete: () => {
+              setIsLanded(true)
+              try {
+                sessionStorage.setItem('poster-pasted', '1')
+              } catch {
+                /* private mode */
+              }
+            },
           })
         } else {
           setIsLanded(true)
@@ -219,7 +240,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
       <PanelArt variant="poster" />
 
       {!isLanded && (
-        <div className={`load ${curtainReady ? 'is-ready' : ''} ${curtainGone ? 'is-gone' : ''}`}>
+        <div className={`load ${curtainReady ? 'is-ready' : ''} ${curtainGone ? 'is-gone' : ''}`} aria-hidden="true">
           <div className="load-meta">
             <div className="load-meter" aria-hidden="true">
               <i />
@@ -246,7 +267,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
 
             <path
               d={archPath(w * 0.5, h * 0.14, h * 1.02, Math.min(w * 0.17, h * 0.3))}
-              fill="#33065e"
+              fill="#1b3a8c"
               stroke="#0a0a0a"
               strokeWidth={Math.max(8, h * 0.014)}
             />
@@ -310,9 +331,15 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         <span>VURA</span>
       </div>
 
-      <div className="block lotus" aria-hidden="true" title="Tap for Brass Horn!" onClick={() => handleHornClick('brass')}>
+      <button
+        type="button"
+        className="block lotus"
+        title="Tap for Brass Horn!"
+        aria-label="Play the brass horn"
+        onClick={() => handleHornClick('brass')}
+      >
         ✿
-      </div>
+      </button>
 
       <button
         type="button"
