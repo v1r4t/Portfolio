@@ -1,0 +1,24 @@
+---
+title: "Sub-Millisecond Canvas: Taming 60fps Data Streams Without Dropping Frames"
+date: AUG 2026
+readTime: 8 MIN READ
+order: 2
+summary: Architecting zero-allocation render loops, Web Workers, and OffscreenCanvas pipelines for industrial-grade creative dev.
+tags:
+  - Performance
+  - Canvas API
+  - TypeScript
+permitMeta:
+  transitNo: NH-65 // 2026-DISP-02
+  origin: VIJAYAWADA
+  destination: PUNE
+  checkpoint: WEIGHBRIDGE 09
+---
+
+The modern web runtime is extraordinarily fast until you ask the Garbage Collector to clean up 50,000 transient JavaScript objects every frame.
+
+When building the Downlink telemetry system, standard React state hooks proved fatal to sustained 60 FPS execution. Every re-render triggered micro-stutters during high-speed sensor bursts.
+
+The solution was architectural decoupling: React manages the shell and navigation state, while raw telemetry streams directly into a SharedArrayBuffer managed by an OffscreenCanvas worker.
+
+Treat the browser like a low-latency instrument. Pre-allocate your buffers, respect memory layout, and let the GPU do what it was built for.

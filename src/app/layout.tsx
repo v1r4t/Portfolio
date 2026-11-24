@@ -7,6 +7,7 @@ import {
   Space_Mono,
   Teko,
 } from 'next/font/google'
+import { MotifDefs } from '@/components/art/MotifDefs'
 import '../styles/theme.css'
 
 const teko = Teko({
@@ -76,7 +77,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${teko.variable} ${modak.variable} ${anek.variable} ${baloo.variable} ${spaceMono.variable} ${barlow.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <MotifDefs />
+        {children}
+      </body>
     </html>
   )
 }

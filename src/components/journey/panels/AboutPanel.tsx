@@ -1,7 +1,10 @@
-import React, { useRef } from 'react'
-import { PanelDecoration } from './PanelDecoration'
+'use client'
 
-export const AboutSection: React.FC = () => {
+import React, { useRef } from 'react'
+import { PanelArt } from '../../art/PanelArt'
+import { PermitStamp } from '../../art/Ornaments'
+
+export const AboutPanel: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const imgRef = useRef<HTMLImageElement | null>(null)
 
@@ -53,12 +56,14 @@ export const AboutSection: React.FC = () => {
 
   return (
     <section className="panel about" id="about" aria-labelledby="about-title">
-      <PanelDecoration panel="about" />
+      <PanelArt variant="about" />
+      <div className="painted-band band-left" aria-hidden="true" />
+      <div className="painted-band band-right" aria-hidden="true" />
 
       <div className="panel-inner">
         <header className="page-head">
           <span className="page-kicker">02 / About</span>
-          <h2 className="page-title" id="about-title">
+          <h2 className="page-title" id="about-title" data-reveal>
             About
           </h2>
         </header>
@@ -82,10 +87,18 @@ export const AboutSection: React.FC = () => {
             </figcaption>
           </figure>
 
-          <div className="about-copy">
-            <p className="about-lede">I make noisy signals legible.</p>
+          <div className="about-copy" data-reveal>
+            <p className="about-lede">
+              I make noisy signals legible.
+              <span className="deva-accent" lang="hi">
+                {' '}
+                मेहनत
+              </span>
+            </p>
             <p className="about-bio">
-              I am a designer and creative engineer working across identity systems, high-speed web platforms, and generative motion. Drawing conviction from Indian highway sign-painting, I build digital experiences with high tactile contrast, deep cultural character, and sub-millisecond execution.
+              I am a designer and creative engineer working across identity systems, high-speed web platforms,
+              and generative motion. Drawing conviction from Indian highway sign-painting, I build digital
+              experiences with high tactile contrast, deep cultural character, and sub-millisecond execution.
             </p>
             <dl className="facts">
               <div>
@@ -102,12 +115,14 @@ export const AboutSection: React.FC = () => {
               </div>
               <div>
                 <dt>Status</dt>
-                <dd className="text-[var(--t-yellow)] font-bold">Open for Commissions</dd>
+                <dd className="status-hot">Open for Commissions</dd>
               </div>
             </dl>
             <p className="about-note">DOSSIER REF // ARCHIVE 2026 // DHRUVA VURA</p>
           </div>
         </div>
+
+        <PermitStamp label="VERIFIED" sub="NH-44 // 2026" className="stamp-inline" />
       </div>
     </section>
   )

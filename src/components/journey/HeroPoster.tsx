@@ -1,13 +1,16 @@
+'use client'
+
 import React, { useEffect, useRef, useState } from 'react'
-import { hornAudio } from '../utils/audio'
-import { useElementSize } from '../utils/useElementSize'
+import gsap from 'gsap'
 import confetti from 'canvas-confetti'
+import { hornAudio } from '../../utils/audio'
+import { useElementSize } from '../../utils/useElementSize'
+import { PanelArt } from '../art/PanelArt'
 
 interface HeroPosterProps {
   onExploreClick?: () => void
 }
 
-/* Pseudo-random generator for reproducible bandhani dot placement */
 function seeded(n: number) {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453
   return x - Math.floor(x)
@@ -23,8 +26,7 @@ function archPath(cx: number, top: number, bottom: number, hw: number) {
   )
 }
 
-/* The mural cast, placed by centre as fractions of the panel, matching the
-   original poster composition. Size scales against the short edge. */
+/* The mural cast, placed by centre as fractions of the panel. */
 const MURAL_CAST = [
   { id: 'm-lotus', x: 0.055, y: 0.095, s: 0.12, rot: -12 },
   { id: 'm-parrot', x: 0.795, y: 0.105, s: 0.1, rot: 10 },
@@ -42,6 +44,8 @@ const MURAL_CAST = [
   { id: 'm-diya', x: 0.3, y: 0.8, s: 0.07, rot: 0 },
   { id: 'm-flower', x: 0.62, y: 0.06, s: 0.055, rot: 0 },
   { id: 'm-paisley', x: 0.66, y: 0.19, s: 0.045, rot: -22 },
+  { id: 'm-star', x: 0.16, y: 0.52, s: 0.05, rot: 0 },
+  { id: 'm-kite', x: 0.52, y: 0.12, s: 0.05, rot: 12 },
 ]
 
 export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
@@ -56,7 +60,6 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
   const dotsCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const [posterRef, { w, h }] = useElementSize<HTMLElement>()
 
-  // Authentic Riso/Print Halftone Dot Screener
   const paintDots = () => {
     const img = portraitImgRef.current
     const canvas = dotsCanvasRef.current
@@ -103,16 +106,30 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     }
   }
 
-  // Entrance Choreography: The Flying Mark
+  // Entrance choreography: the flying Telugu mark lands on the poster word.
   useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduced) {
+      const t = setTimeout(() => {
+        setCurtainReady(true)
+        setCurtainGone(true)
+        setIsRevealed(true)
+        setIsLanded(true)
+      }, 250)
+      return () => clearTimeout(t)
+    }
+
+    let flightTween: gsap.core.Tween | null = null
+    let revealTimer: ReturnType<typeof setTimeout> | null = null
+
     const timer = setTimeout(() => {
       setCurtainReady(true)
 
-      setTimeout(() => {
+      revealTimer = setTimeout(() => {
         setCurtainGone(true)
         setIsRevealed(true)
 
-        // Calculate exact flight delta
         const mark = loadMarkRef.current
         const topWord = topWordRef.current
 
@@ -122,24 +139,25 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
           const dx = to.left + to.width / 2 - (from.left + from.width / 2)
           const dy = to.top + to.height / 2 - (from.top + from.height / 2)
 
-          const animation = mark.animate(
-            [
-              { transform: 'translate(-50%, -50%) rotate(-6deg)' },
-              { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(-6deg)` },
-            ],
-            { duration: 900, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' }
-          )
-
-          animation.onfinish = () => {
-            setIsLanded(true)
-          }
+          gsap.set(mark, { xPercent: -50, yPercent: -50, rotation: -6 })
+          flightTween = gsap.to(mark, {
+            x: dx,
+            y: dy,
+            duration: 0.9,
+            ease: 'power3.inOut',
+            onComplete: () => setIsLanded(true),
+          })
         } else {
           setIsLanded(true)
         }
       }, 140)
-    }, 1400)
+    }, 1200)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      if (revealTimer) clearTimeout(revealTimer)
+      flightTween?.kill()
+    }
   }, [])
 
   const handleHornClick = (type: 'brass' | 'melody') => {
@@ -152,7 +170,6 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     })
   }
 
-  /* 22 Sunburst rays radiating inside the jharokha arch */
   const renderSunburstRays = (width: number, height: number) => {
     const N = 22
     const cx = width * 0.5
@@ -171,7 +188,6 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     return rays.join(' ')
   }
 
-  /* 5 Bandhani dot clusters */
   const renderBandhaniDots = (width: number, height: number) => {
     const clusters = [
       [0.12, 0.24],
@@ -190,15 +206,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         const r = 3 + seeded(ci * 20 + i + 3) * 8
         const fill = colors[Math.floor(seeded(ci * 20 + i + 11) * 4)]
         dots.push(
-          <circle
-            key={`dot-${ci}-${i}`}
-            cx={x.toFixed(1)}
-            cy={y.toFixed(1)}
-            r={r.toFixed(1)}
-            fill={fill}
-            stroke="#0a0a0a"
-            strokeWidth="2"
-          />
+          <circle key={`dot-${ci}-${i}`} cx={x.toFixed(1)} cy={y.toFixed(1)} r={r.toFixed(1)} fill={fill} stroke="#0a0a0a" strokeWidth="2" />
         )
       }
     })
@@ -209,7 +217,8 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     <section ref={posterRef} className="poster" id="home" aria-label="Home">
       <h1 className="sr-only">Dhruva Vura — designer and developer</h1>
 
-      {/* Loading Ink Curtain */}
+      <PanelArt variant="poster" />
+
       {!isLanded && (
         <div className={`load ${curtainReady ? 'is-ready' : ''} ${curtainGone ? 'is-gone' : ''}`}>
           <div className="load-meta">
@@ -221,40 +230,21 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         </div>
       )}
 
-      {/* The Flying Mark */}
       {!isLanded && (
         <div ref={loadMarkRef} className="load-mark" lang="te" aria-hidden="true">
           ధ్రువ
         </div>
       )}
 
-      {/* The Jaali Lattice */}
-      <div className="lattice" aria-hidden="true" />
-
-      {/* Riso Screen and Floral Trim Frame */}
-      <div className="trim" aria-hidden="true">
-        <div className="trim-halftone" />
-        <div className="trim-frame" />
-      </div>
-
-      {/* The Grain Layer */}
-      <div className="grain" aria-hidden="true" />
-
-      {/* Mural Layer: niche, sunburst, cast and bandhani dots in real panel size */}
       {isRevealed && w > 0 && h > 0 && (
-        <div className="mural-wrap absolute inset-0 pointer-events-none z-0" aria-hidden="true">
-          <svg
-            className="w-full h-full"
-            viewBox={`0 0 ${w} ${h}`}
-            preserveAspectRatio="xMidYMid slice"
-          >
+        <div className="mural-wrap" aria-hidden="true">
+          <svg className="mural-svg" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid slice">
             <defs>
               <clipPath id="arch-niche-clip">
                 <path d={archPath(w * 0.5, h * 0.14, h * 1.02, Math.min(w * 0.17, h * 0.3))} />
               </clipPath>
             </defs>
 
-            {/* Jharokha Arch Body */}
             <path
               d={archPath(w * 0.5, h * 0.14, h * 1.02, Math.min(w * 0.17, h * 0.3))}
               fill="#33065e"
@@ -262,13 +252,11 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
               strokeWidth={Math.max(8, h * 0.014)}
             />
 
-            {/* 22-Ray Golden Sunburst inside Arch */}
             <g clipPath="url(#arch-niche-clip)">
               <circle cx={w * 0.5} cy={h * 0.43} r={h * 0.13} fill="#ffd400" opacity="0.18" />
               <path d={renderSunburstRays(w, h)} fill="#ffd400" opacity="0.3" />
             </g>
 
-            {/* Scattered Folklore Motifs */}
             {MURAL_CAST.map((m, idx) => {
               const size = m.s * Math.min(w, h) * 1.6
               const cx = m.x * w
@@ -286,36 +274,27 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
               )
             })}
 
-            {/* 5 Clusters of Bandhani Dots */}
             {renderBandhaniDots(w, h)}
           </svg>
         </div>
       )}
 
-      {/* The Landed Top Word (Telugu Script) */}
-      <div
-        ref={topWordRef}
-        className="top-word"
-        lang="te"
-        style={{ opacity: isLanded ? 0.95 : 0 }}
-      >
+      <div ref={topWordRef} className="top-word" lang="te" style={{ opacity: isLanded ? 0.95 : 0 }}>
         ధ్రువ
       </div>
 
-      {/* Small Latin Wordmark for Mobile */}
       <div className="wordmark" aria-hidden="true" style={{ opacity: isLanded ? 1 : 0 }}>
         Dhruva Vura
       </div>
 
-      {/* The Central Role Tagline */}
-      <div className="role">I make noisy signals legible</div>
+      <div className="role" data-reveal>
+        I make noisy signals legible
+      </div>
 
-      {/* Side Display Name — Left: DHRUVA */}
       <div className="name-side left">
         <span>DHRUVA</span>
       </div>
 
-      {/* Centerpiece Portrait with Halftone Plate */}
       <div className="portrait-wrap">
         <img
           ref={portraitImgRef}
@@ -328,23 +307,16 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         <canvas ref={dotsCanvasRef} className="portrait-dots" aria-hidden="true" />
       </div>
 
-      {/* Side Display Name — Right: VURA */}
       <div className="name-side right">
         <span>VURA</span>
       </div>
 
-      {/* Corner Enamel Block — Left: Lotus Badge */}
-      <div
-        className="block lotus"
-        aria-hidden="true"
-        title="Tap for Brass Horn!"
-        onClick={() => handleHornClick('brass')}
-      >
+      <div className="block lotus" aria-hidden="true" title="Tap for Brass Horn!" onClick={() => handleHornClick('brass')}>
         ✿
       </div>
 
-      {/* Corner Enamel Block — Right: Horn OK Please Slogan */}
-      <div
+      <button
+        type="button"
         className="block slogan"
         title="Tap for Melodic Horn!"
         onClick={() => {
@@ -353,7 +325,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         }}
       >
         Horn OK Please
-      </div>
+      </button>
     </section>
   )
 }

@@ -1,5 +1,6 @@
 export interface Project {
   id: string
+  slug: string
   title: string
   subtitle: string
   category: 'Brand Identity' | 'Web Engineering' | 'Motion Systems' | 'Creative Direction'
@@ -22,21 +23,20 @@ export interface Project {
   }
 }
 
-export interface BlogPost {
-  id: string
-  title: string
+export interface PostMeta {
   slug: string
+  title: string
   date: string
   readTime: string
   summary: string
   tags: string[]
+  order: number
   permitMeta: {
     transitNo: string
     origin: string
     destination: string
     checkpoint: string
   }
-  content: string[]
 }
 
 export interface NavStop {

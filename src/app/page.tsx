@@ -1,8 +1,8 @@
+import { Journey } from '@/components/journey/Journey'
+import { NAV_STOPS, PROJECTS } from '@/data/portfolio'
+import { getAllPosts } from '@/lib/posts'
+
 export default function Home() {
-  return (
-    <main className="boot">
-      <p className="boot-kicker">NH-44 // REBUILD IN PROGRESS</p>
-      <h1 className="boot-title">HORN OK PLEASE</h1>
-    </main>
-  )
+  const posts = getAllPosts()
+  return <Journey stops={NAV_STOPS} projects={PROJECTS} posts={posts} />
 }

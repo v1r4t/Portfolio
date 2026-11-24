@@ -1,14 +1,16 @@
-import React from 'react'
+'use client'
 
-export const TruckArtSymbols: React.FC = () => {
+/**
+ * MotifDefs — the painted vocabulary of the lorry.
+ * Rendered once per page so panels can <use href="#m-…" /> any motif.
+ * Existing symbols ported from the original build; bulb, star, chakra and
+ * kite are new for the maximalist skin.
+ */
+export const MotifDefs = () => {
   return (
-    <svg className="hidden pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <svg className="motif-defs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Chilli path templates (used by the hanging bunch) */}
-        <path
-          id="m-chilli-pod"
-          d="M0 6 C-12 40 -13 98 0 154 C6 170 17 168 19 150 C23 94 14 38 0 6Z"
-        />
+        <path id="m-chilli-pod" d="M0 6 C-12 40 -13 98 0 154 C6 170 17 168 19 150 C23 94 14 38 0 6Z" />
         <path id="m-chilli-cal" d="M-6 4 Q0 -7 6 4 Q0 12 -6 4Z" />
 
         {/* Lotus Symbol */}
@@ -27,16 +29,9 @@ export const TruckArtSymbols: React.FC = () => {
         <symbol id="m-marigold" viewBox="0 0 100 100">
           <g stroke="#0a0a0a" strokeWidth="2.2">
             <g fill="#ffd400">
-              <ellipse cx="50" cy="27" rx="8" ry="16" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(36 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(72 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(108 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(144 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(180 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(216 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(252 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(288 50 50)" />
-              <ellipse cx="50" cy="27" rx="8" ry="16" transform="rotate(324 50 50)" />
+              {Array.from({ length: 10 }, (_, i) => (
+                <ellipse key={i} cx="50" cy="27" rx="8" ry="16" transform={`rotate(${i * 36} 50 50)`} />
+              ))}
             </g>
             <circle cx="50" cy="50" r="11" fill="#e2231a" />
           </g>
@@ -89,12 +84,7 @@ export const TruckArtSymbols: React.FC = () => {
             <rect x="150" y="112" width="24" height="52" rx="7" fill="#1b3a8c" />
             <ellipse cx="100" cy="92" rx="74" ry="44" fill="#00b3b0" />
             <path d="M44 66 Q100 44 156 66 L150 102 Q100 116 50 102Z" fill="#e2231a" />
-            <path
-              d="M60 60 L66 96 M86 54 L90 100 M114 54 L110 100 M140 58 L134 96"
-              fill="none"
-              stroke="#ffd400"
-              strokeWidth="3"
-            />
+            <path d="M60 60 L66 96 M86 54 L90 100 M114 54 L110 100 M140 58 L134 96" fill="none" stroke="#ffd400" strokeWidth="3" />
             <circle cx="178" cy="88" r="34" fill="#00b3b0" />
             <ellipse cx="152" cy="92" rx="17" ry="27" fill="#ffd400" transform="rotate(-10 152 92)" />
             <path d="M198 100 Q214 132 196 156" fill="none" stroke="#0a0a0a" strokeWidth="20" strokeLinecap="round" />
@@ -121,14 +111,9 @@ export const TruckArtSymbols: React.FC = () => {
         <symbol id="m-flower" viewBox="0 0 100 100">
           <g stroke="#0a0a0a" strokeWidth="2.4">
             <g fill="#ffd400">
-              <ellipse cx="50" cy="25" rx="11" ry="21" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(45 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(90 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(135 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(180 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(225 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(270 50 50)" />
-              <ellipse cx="50" cy="25" rx="11" ry="21" transform="rotate(315 50 50)" />
+              {Array.from({ length: 8 }, (_, i) => (
+                <ellipse key={i} cx="50" cy="25" rx="11" ry="21" transform={`rotate(${i * 45} 50 50)`} />
+              ))}
             </g>
             <circle cx="50" cy="50" r="10" fill="#e2231a" />
           </g>
@@ -204,7 +189,7 @@ export const TruckArtSymbols: React.FC = () => {
           </g>
         </symbol>
 
-        {/* Nimbu-Mirchi (three-pepper cut-out ward) */}
+        {/* Nimbu-Mirchi (evil-eye ward) */}
         <symbol id="m-chilli" viewBox="0 0 180 240">
           <g stroke="#0a0a0a" strokeWidth="3" strokeLinejoin="round">
             <path d="M90 0 L90 26" fill="none" strokeWidth="2.4" />
@@ -212,29 +197,63 @@ export const TruckArtSymbols: React.FC = () => {
             <path d="M90 33 C76 24 64 28 58 39 C72 42 82 39 90 33Z" fill="#8cc63f" />
             <path d="M90 33 C104 24 116 28 122 39 C108 42 98 39 90 33Z" fill="#8cc63f" />
           </g>
-
           <g transform="translate(90 36)">
-            <g transform="rotate(-24)">
-              <use href="#m-chilli-pod" fill="#fff8e7" stroke="#fff8e7" strokeWidth="8" />
-              <use href="#m-chilli-cal" fill="#fff8e7" stroke="#fff8e7" strokeWidth="7" />
-              <use href="#m-chilli-pod" fill="#cf1d15" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
-              <use href="#m-chilli-cal" fill="#8cc63f" stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round" />
-              <path d="M2 24 C-5 58 -5 106 2 136" fill="none" stroke="#fff8e7" strokeWidth="2.2" opacity="0.35" />
-            </g>
-            <g>
-              <use href="#m-chilli-pod" fill="#fff8e7" stroke="#fff8e7" strokeWidth="8" />
-              <use href="#m-chilli-cal" fill="#fff8e7" stroke="#fff8e7" strokeWidth="7" />
-              <use href="#m-chilli-pod" fill="#cf1d15" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
-              <use href="#m-chilli-cal" fill="#8cc63f" stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round" />
-              <path d="M2 24 C-5 60 -6 110 1 142" fill="none" stroke="#fff8e7" strokeWidth="2.2" opacity="0.35" />
-            </g>
-            <g transform="rotate(24)">
-              <use href="#m-chilli-pod" fill="#fff8e7" stroke="#fff8e7" strokeWidth="8" />
-              <use href="#m-chilli-cal" fill="#fff8e7" stroke="#fff8e7" strokeWidth="7" />
-              <use href="#m-chilli-pod" fill="#cf1d15" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
-              <use href="#m-chilli-cal" fill="#8cc63f" stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round" />
-              <path d="M2 24 C-5 58 -5 106 2 136" fill="none" stroke="#fff8e7" strokeWidth="2.2" opacity="0.35" />
-            </g>
+            {[-24, 0, 24].map((angle) => (
+              <g key={angle} transform={`rotate(${angle})`}>
+                <use href="#m-chilli-pod" fill="#fff8e7" stroke="#fff8e7" strokeWidth="8" />
+                <use href="#m-chilli-cal" fill="#fff8e7" stroke="#fff8e7" strokeWidth="7" />
+                <use href="#m-chilli-pod" fill="#cf1d15" stroke="#0a0a0a" strokeWidth="4" strokeLinejoin="round" />
+                <use href="#m-chilli-cal" fill="#8cc63f" stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round" />
+                <path d="M2 24 C-5 58 -5 106 2 136" fill="none" stroke="#fff8e7" strokeWidth="2.2" opacity="0.35" />
+              </g>
+            ))}
+          </g>
+        </symbol>
+
+        {/* ——— NEW FOR THE PAINTED-LORRY SKIN ——— */}
+
+        {/* Electric bulb (for bulb chains) */}
+        <symbol id="m-bulb" viewBox="0 0 48 72">
+          <g stroke="#0a0a0a" strokeWidth="2.4" strokeLinejoin="round">
+            <rect x="17" y="34" width="14" height="10" rx="2" fill="#1b3a8c" />
+            <path d="M20 44 L20 50 L28 50 L28 44" fill="#8c8c8c" />
+            <circle cx="24" cy="22" r="16" fill="#ffd400" />
+            <path d="M19 22 Q24 15 29 22" fill="none" strokeWidth="1.8" />
+            <path d="M19 26 Q24 19 29 26" fill="none" strokeWidth="1.8" />
+            <path d="M24 50 L24 56" fill="none" strokeWidth="2" />
+          </g>
+        </symbol>
+
+        {/* 8-point star */}
+        <symbol id="m-star" viewBox="0 0 100 100">
+          <path
+            d="M50 2 L60 28 L86 14 L78 42 L98 50 L78 58 L86 86 L60 72 L50 98 L40 72 L14 86 L22 58 L2 50 L22 42 L14 14 L40 28Z"
+            fill="#ffd400"
+            stroke="#0a0a0a"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+          <circle cx="50" cy="50" r="8" fill="#e2231a" stroke="#0a0a0a" strokeWidth="2.4" />
+        </symbol>
+
+        {/* Chakra wheel */}
+        <symbol id="m-chakra" viewBox="0 0 100 100">
+          <g stroke="#0a0a0a" strokeWidth="2.6">
+            <circle cx="50" cy="50" r="44" fill="#fff8e7" />
+            <circle cx="50" cy="50" r="34" fill="none" />
+            {Array.from({ length: 12 }, (_, i) => (
+              <path key={i} d="M50 50 L50 12" transform={`rotate(${i * 30} 50 50)`} strokeWidth="2" />
+            ))}
+            <circle cx="50" cy="50" r="9" fill="#e2231a" />
+          </g>
+        </symbol>
+
+        {/* Kite (patang) */}
+        <symbol id="m-kite" viewBox="0 0 100 130">
+          <g stroke="#0a0a0a" strokeWidth="2.8" strokeLinejoin="round">
+            <path d="M50 4 L92 48 L50 96 L8 48Z" fill="#e2231a" />
+            <path d="M50 4 L50 96 M8 48 L92 48" fill="none" strokeWidth="2" />
+            <path d="M50 96 Q42 116 58 122 Q68 126 62 112" fill="none" strokeWidth="2.4" />
           </g>
         </symbol>
       </defs>
