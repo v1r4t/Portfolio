@@ -52,14 +52,28 @@ const browser = await chromium.launch()
     return el?.closest('.project-card') ? 'ok' : `blocked by ${el?.className}`
   })
 
-  // keyboard: ArrowRight twice from home
+  // keyboard: ArrowRight twice from home (Lenis animates, so allow the full tween)
   await page.evaluate(() => document.querySelector('.track')?.scrollTo({ left: 0, behavior: 'auto' }))
-  await page.waitForTimeout(400)
+  await page.waitForTimeout(600)
   await page.keyboard.press('ArrowRight')
   await page.keyboard.press('ArrowRight')
-  await page.waitForTimeout(900)
+  await page.waitForTimeout(1600)
   results.keyboardScrollLeft = await page.evaluate(() => document.querySelector('.track')?.scrollLeft)
   results.keyboardExpected = vw * 2
+
+  results.paintCanvas = await page.evaluate(() => {
+    const canvas = document.querySelector('.paint-canvas')
+    return { exists: !!canvas, ready: canvas?.getAttribute('data-ready') ?? null }
+  })
+
+  // mid-dissolve: park between panels to capture the halftone paint wipe
+  await page.evaluate(() => {
+    const track = document.querySelector('.track')
+    if (track) track.scrollLeft = track.clientWidth * 1.5
+  })
+  await page.waitForTimeout(120)
+  await page.screenshot({ path: path.join(OUT, 'mid-dissolve.png') })
+  await page.waitForTimeout(1400)
 
   await page.screenshot({ path: path.join(OUT, 'desktop-projects.png') })
   await context.close()
@@ -69,7 +83,7 @@ const browser = await chromium.launch()
 {
   const { context, page } = await openPage(browser, { url: `${BASE}/#projects`, viewport: { width: 1440, height: 900 } })
   const vw = await page.evaluate(() => window.innerWidth)
-  await page.waitForTimeout(900)
+  await page.waitForTimeout(1600)
   results.hashScrollLeft = await page.evaluate(() => document.querySelector('.track')?.scrollLeft)
   results.hashExpected = vw * 3
   await context.close()

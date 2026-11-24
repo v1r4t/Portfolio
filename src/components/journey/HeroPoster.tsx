@@ -55,6 +55,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
   const [isLanded, setIsLanded] = useState(false)
 
   const loadMarkRef = useRef<HTMLDivElement | null>(null)
+  const loadPercentRef = useRef<HTMLSpanElement | null>(null)
   const topWordRef = useRef<HTMLDivElement | null>(null)
   const portraitImgRef = useRef<HTMLImageElement | null>(null)
   const dotsCanvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -136,6 +137,18 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     let flightTween: gsap.core.Tween | null = null
     let revealTimer: ReturnType<typeof setTimeout> | null = null
 
+    const counter = { value: 0 }
+    const counterTween = gsap.to(counter, {
+      value: 100,
+      duration: 1.2,
+      ease: 'power2.inOut',
+      onUpdate: () => {
+        if (loadPercentRef.current) {
+          loadPercentRef.current.textContent = String(Math.round(counter.value)).padStart(3, '0')
+        }
+      },
+    })
+
     const timer = setTimeout(() => {
       setCurtainReady(true)
 
@@ -176,6 +189,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     return () => {
       clearTimeout(timer)
       if (revealTimer) clearTimeout(revealTimer)
+      counterTween.kill()
       flightTween?.kill()
     }
   }, [])
@@ -245,7 +259,9 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
             <div className="load-meter" aria-hidden="true">
               <i />
             </div>
-            <div className="load-label">Pasting the poster</div>
+            <div className="load-label">
+              Pasting the poster <span ref={loadPercentRef} className="load-percent">000</span>
+            </div>
           </div>
         </div>
       )}

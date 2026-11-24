@@ -169,3 +169,32 @@ Remaining and deliberate: real social profile URLs still placeholders (owner inp
 `next/image` not used for the cutout portrait plates (halftone canvas overlay); Lenis is on
 reading pages only, not the snap track (tool limitation: capture tool cannot verify multiple
 inner scrollers); plus mundane post-ship items noted in review.
+
+---
+
+## Motion layer — the heavy stack (2026-11-24, second pass)
+
+Owner asked for the heaviest showcase stack and theme-suited motion. Added:
+
+- **GSAP** now registers **SplitText** (decal letter entrances on page titles) and
+  **ScrollTrigger** (detail-page parallax + block reveals), alongside the existing timelines.
+- **Lenis** drives the journey horizontally: `wrapper: .track`, `content: .track-inner`,
+  `orientation: horizontal`, wheel smoothing + magnetic snapping to the nearest panel on idle,
+  with a programmatic-navigation guard so tweens are not fought by the snap.
+- **WebGL paint engine** (`src/components/motion/PaintCanvas.tsx`): Three.js fullscreen quad,
+  custom fragment shader rendering the journey ground as a **halftone-dot dissolve** between
+  panel pigments with a wet ink ring, paper grain and vignette. Renders only on progress/resize.
+- **Ink cursor** (`InkCursor.tsx`): painted blob + fading 2D ink trail, fine pointers only,
+  grows and turns chrome yellow over interactive elements; journey cursor hidden only after init.
+- **Audio-reactive bulbs** (`HornReactive.tsx` + analyser in `audio.ts`): the horn's waveform
+  drives `--horn-level`, which brightens the bulb chains and glows the active road dot.
+- **Loader upgrade**: painted counter 000→100 driven by GSAP.
+- **Panel grounds moved from CSS to the shader**; panels keep their decorative `::before/::after`.
+
+Verification: `scripts/verify.mjs` (navigation/overlay/reduced-motion) and
+`scripts/verify-motion.mjs` (loader counter, cursor, horn analyser levels, hero parallax,
+mobile WebGL) both pass with zero page errors.
+
+Known trade-offs: one fullscreen shader (cheap, no loops) instead of per-panel CSS gradients;
+Lenis native touch retained (`syncTouch: false`) with snap on idle; custom cursor disabled on
+coarse pointers and reduced motion.

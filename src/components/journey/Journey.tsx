@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Lenis from 'lenis'
 import gsap from 'gsap'
+import { SplitText } from 'gsap/SplitText'
 import type { NavStop, PostMeta, Project } from '../../types'
 import { HeroPoster } from './HeroPoster'
 import { NavigationRoad } from './NavigationRoad'
@@ -9,6 +11,11 @@ import { AboutPanel } from './panels/AboutPanel'
 import { BlogsPanel } from './panels/BlogsPanel'
 import { ProjectsPanel } from './panels/ProjectsPanel'
 import { ContactPanel } from './panels/ContactPanel'
+import { PaintCanvas } from '../motion/PaintCanvas'
+import { InkCursor } from '../motion/InkCursor'
+import { HornReactive } from '../motion/HornReactive'
+
+gsap.registerPlugin(SplitText)
 
 interface JourneyProps {
   stops: NavStop[]
@@ -16,10 +23,16 @@ interface JourneyProps {
   posts: PostMeta[]
 }
 
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
+
 export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
   const trackRef = useRef<HTMLElement | null>(null)
+  const innerRef = useRef<HTMLDivElement | null>(null)
   const panelRefs = useRef<Array<HTMLDivElement | null>>([])
   const drivingTimeoutRef = useRef<number | null>(null)
+  const lenisRef = useRef<Lenis | null>(null)
+  const currentIndexRef = useRef(0)
+  const programmaticUntilRef = useRef(0)
 
   const [currentStopIndex, setCurrentStopIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -37,42 +50,116 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     return () => clearTimeout(timer)
   }, [reducedMotion])
 
-  const scrollToStop = useCallback((index: number, behavior: ScrollBehavior = 'smooth') => {
+  const applyScroll = useCallback(
+    (scrollLeft: number) => {
+      const track = trackRef.current
+      if (!track) return
+      const width = track.clientWidth
+      const maxScroll = track.scrollWidth - width
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollLeft / maxScroll)) : 0
+      setScrollProgress(progress)
+
+      const activeIndex = Math.max(0, Math.min(stops.length - 1, Math.round(scrollLeft / width)))
+      const isProgrammatic = Date.now() < programmaticUntilRef.current
+      if (!isProgrammatic) {
+        currentIndexRef.current = activeIndex
+        setCurrentStopIndex(activeIndex)
+      }
+
+      const activeStop = stops[activeIndex]
+      if (activeStop) {
+        document.documentElement.style.backgroundColor = activeStop.bgTheme
+        document.body.style.backgroundColor = activeStop.bgTheme
+      }
+
+      setIsDriving(true)
+      if (drivingTimeoutRef.current) clearTimeout(drivingTimeoutRef.current)
+      drivingTimeoutRef.current = window.setTimeout(() => {
+        setIsDriving(false)
+        const stop = stops[activeIndex]
+        if (stop && window.location.hash !== `#${stop.id}`) {
+          history.replaceState(null, '', `#${stop.id}`)
+        }
+      }, 180)
+    },
+    [stops]
+  )
+
+  const scrollToStop = useCallback(
+    (index: number, immediate = false) => {
+      const track = trackRef.current
+      if (!track) return
+      const targetIndex = Math.max(0, Math.min(stops.length - 1, index))
+      const target = targetIndex * track.clientWidth
+      currentIndexRef.current = targetIndex
+      setCurrentStopIndex(targetIndex)
+      programmaticUntilRef.current = Date.now() + 1400
+      applyScroll(target)
+
+      if (lenisRef.current && !immediate) {
+        lenisRef.current.scrollTo(target, { duration: 1.1, easing: easeOutCubic })
+      } else if (lenisRef.current) {
+        lenisRef.current.scrollTo(target, { immediate: true })
+      } else {
+        track.scrollTo({ left: target, behavior: reducedMotion ? 'auto' : 'smooth' })
+      }
+    },
+    [stops.length, reducedMotion, applyScroll]
+  )
+
+  // Lenis smooth-wheel on the journey + magnetic snapping to panels
+  useEffect(() => {
     const track = trackRef.current
-    if (!track) return
-    const targetIndex = Math.max(0, Math.min(stops.length - 1, index))
-    track.scrollTo({ left: targetIndex * track.clientWidth, behavior })
-    setCurrentStopIndex(targetIndex)
-  }, [stops.length])
+    const content = innerRef.current
+    if (!track || !content || reducedMotion) return
 
-  const handleScroll = useCallback(() => {
-    const track = trackRef.current
-    if (!track) return
-    const { scrollLeft, scrollWidth, clientWidth } = track
-    const maxScroll = scrollWidth - clientWidth
+    const lenis = new Lenis({
+      wrapper: track,
+      content,
+      orientation: 'horizontal',
+      gestureOrientation: 'vertical',
+      lerp: 0.11,
+      smoothWheel: true,
+      syncTouch: false,
+      touchMultiplier: 1.4,
+      autoRaf: true,
+    })
+    lenisRef.current = lenis
 
-    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollLeft / maxScroll)) : 0
-    setScrollProgress(progress)
+    let idleTimer: number | null = null
+    let snapping = false
 
-    const activeIndex = Math.round(scrollLeft / clientWidth)
-    setCurrentStopIndex(activeIndex)
-
-    const activeStop = stops[activeIndex]
-    if (activeStop) {
-      document.documentElement.style.backgroundColor = activeStop.bgTheme
-      document.body.style.backgroundColor = activeStop.bgTheme
+    const onLenisScroll = () => {
+      if (snapping) return
+      if (Date.now() < programmaticUntilRef.current) return
+      if (idleTimer) clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(() => {
+        const width = track.clientWidth
+        const current = track.scrollLeft
+        const index = Math.max(0, Math.min(stops.length - 1, Math.round(current / width)))
+        const target = index * width
+        if (Math.abs(current - target) > 6) {
+          snapping = true
+          lenis.scrollTo(target, {
+            duration: 1,
+            easing: easeOutCubic,
+            lock: true,
+            onComplete: () => {
+              snapping = false
+            },
+          })
+        }
+      }, 150)
     }
 
-    setIsDriving(true)
-    if (drivingTimeoutRef.current) clearTimeout(drivingTimeoutRef.current)
-    drivingTimeoutRef.current = window.setTimeout(() => {
-      setIsDriving(false)
-      const stop = stops[activeIndex]
-      if (stop && window.location.hash !== `#${stop.id}`) {
-        history.replaceState(null, '', `#${stop.id}`)
-      }
-    }, 180)
-  }, [stops])
+    lenis.on('scroll', onLenisScroll)
+
+    return () => {
+      if (idleTimer) clearTimeout(idleTimer)
+      lenis.destroy()
+      lenisRef.current = null
+    }
+  }, [reducedMotion, stops.length])
 
   useEffect(() => {
     return () => {
@@ -86,14 +173,14 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       const target = e.target as HTMLElement | null
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return
       if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-        scrollToStop(currentStopIndex + 1)
+        scrollToStop(currentIndexRef.current + 1)
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        scrollToStop(currentStopIndex - 1)
+        scrollToStop(currentIndexRef.current - 1)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentStopIndex, scrollToStop])
+  }, [scrollToStop])
 
   // Deep-link restore: /#projects lands on the projects panel
   useEffect(() => {
@@ -101,10 +188,10 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       const id = window.location.hash.replace('#', '')
       const index = stops.findIndex((stop) => stop.id === id)
       if (index >= 0) {
-        requestAnimationFrame(() => scrollToStop(index, 'auto'))
+        requestAnimationFrame(() => scrollToStop(index, true))
       }
     }
-    const timer = setTimeout(applyHash, 120)
+    const timer = setTimeout(applyHash, 80)
     window.addEventListener('hashchange', applyHash)
     return () => {
       clearTimeout(timer)
@@ -112,13 +199,38 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     }
   }, [stops, scrollToStop])
 
-  // GSAP entrance choreography for the active panel
+  // GSAP entrance choreography: split-decal titles + staggered cards
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const panel = panelRefs.current[currentStopIndex]
     if (!panel) return
 
-    const revealItems = panel.querySelectorAll('[data-reveal]')
+    const splits: SplitText[] = []
+    const titles = Array.from(panel.querySelectorAll<HTMLElement>('.page-title'))
+    titles.forEach((title) => {
+      const split = new SplitText(title, { type: 'chars,words', charsClass: 'split-char' })
+      splits.push(split)
+      gsap.fromTo(
+        split.chars,
+        {
+          yPercent: 74,
+          opacity: 0,
+          rotate: () => gsap.utils.random(-9, 9),
+          transformOrigin: '0% 100%',
+        },
+        {
+          yPercent: 0,
+          opacity: 1,
+          rotate: 0,
+          duration: 0.55,
+          ease: 'back.out(1.7)',
+          stagger: 0.035,
+          overwrite: true,
+        }
+      )
+    })
+
+    const revealItems = panel.querySelectorAll('[data-reveal]:not(.page-title)')
     const cards = panel.querySelectorAll(
       '.blog-card, .project-card, .facts > div, .contact-meta > *, .about-frame, .marquee'
     )
@@ -148,32 +260,41 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       }
     }, panel)
 
-    return () => ctx.revert()
-  }, [currentStopIndex, reducedMotion])
+    return () => {
+      ctx.revert()
+      splits.forEach((split) => split.revert())
+    }
+  }, [currentStopIndex])
 
   return (
     <div className="journey">
+      <PaintCanvas progress={scrollProgress} stops={stops} />
+      <InkCursor />
+      <HornReactive />
+
       <main
         ref={trackRef}
-        onScroll={handleScroll}
+        onScroll={(event) => applyScroll(event.currentTarget.scrollLeft)}
         className="track"
         tabIndex={0}
         aria-label="Dhruva Vura Portfolio Road"
       >
-        <div className="panel-slot" ref={(el) => { panelRefs.current[0] = el }}>
-          <HeroPoster onExploreClick={() => scrollToStop(1)} />
-        </div>
-        <div className="panel-slot" ref={(el) => { panelRefs.current[1] = el }}>
-          <AboutPanel />
-        </div>
-        <div className="panel-slot" ref={(el) => { panelRefs.current[2] = el }}>
-          <BlogsPanel posts={posts} />
-        </div>
-        <div className="panel-slot" ref={(el) => { panelRefs.current[3] = el }}>
-          <ProjectsPanel projects={projects} />
-        </div>
-        <div className="panel-slot" ref={(el) => { panelRefs.current[4] = el }}>
-          <ContactPanel />
+        <div className="track-inner" ref={innerRef}>
+          <div className="panel-slot" ref={(el) => { panelRefs.current[0] = el }}>
+            <HeroPoster onExploreClick={() => scrollToStop(1)} />
+          </div>
+          <div className="panel-slot" ref={(el) => { panelRefs.current[1] = el }}>
+            <AboutPanel />
+          </div>
+          <div className="panel-slot" ref={(el) => { panelRefs.current[2] = el }}>
+            <BlogsPanel posts={posts} />
+          </div>
+          <div className="panel-slot" ref={(el) => { panelRefs.current[3] = el }}>
+            <ProjectsPanel projects={projects} />
+          </div>
+          <div className="panel-slot" ref={(el) => { panelRefs.current[4] = el }}>
+            <ContactPanel />
+          </div>
         </div>
       </main>
 
