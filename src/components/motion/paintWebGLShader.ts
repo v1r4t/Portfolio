@@ -44,14 +44,16 @@ vec2 transitionField(float panel, vec2 uv, float progress, float aspect) {
     accent = (1.0 - smoothstep(0.0, 0.05, abs(band - front))) * live * (1.0 - punched);
   } else if (panel > 2.5 && panel < 3.5) {
     float chev = uv.x - abs(uv.y - 0.5) * 0.65;
-    float front = progress * 1.4 - 0.2;
-    mask = smoothstep(front - 0.16, front + 0.16, chev);
-    accent = (1.0 - smoothstep(0.0, 0.07, abs(chev - front))) * live;
+    float front = progress * 1.7 - 0.2;
+    float field = 1.0 - chev;
+    mask = 1.0 - smoothstep(front - 0.16, front + 0.16, field);
+    accent = (1.0 - smoothstep(0.0, 0.07, abs(field - front))) * live;
   } else if (panel > 3.5) {
     float noise = hash21(floor(uv * vec2(8.0, 10.0)));
-    float front = progress * 1.3 - 0.15 + (noise - 0.5) * 0.18;
-    mask = smoothstep(front - 0.12, front + 0.12, uv.x);
-    accent = smoothstep(0.0, 0.35, 1.0 - abs(uv.x - front)) * live * 0.4;
+    float front = progress * 1.4 - 0.15 + (noise - 0.5) * 0.18;
+    float field = 1.0 - uv.x;
+    mask = 1.0 - smoothstep(front - 0.12, front + 0.12, field);
+    accent = smoothstep(0.0, 0.35, 1.0 - abs(field - front)) * live * step(front, 1.0) * 0.4;
   }
 
   return vec2(mask, accent);
@@ -76,7 +78,8 @@ void main() {
 
   vec2 style = transitionField(uPanel, uv, uMix, size.x / size.y);
   float coverage = clamp(uMix * (0.15 + 0.85 * style.x), 0.0, 1.0);
-  float radius = sqrt(coverage) * 0.72;
+  float resolve = smoothstep(0.8, 1.0, uMix);
+  float radius = sqrt(coverage) * mix(0.72, 1.06, resolve);
   float dotMask = 1.0 - smoothstep(radius - aa, radius + aa, dotDist);
 
   vec3 ink = vec3(0.039);

@@ -99,9 +99,11 @@ await page.goto('http://localhost:3000/#contact', { waitUntil: 'networkidle' })
 await page.waitForTimeout(3000)
 const contactRoad = await page.evaluate(() => {
   const road = document.querySelector('.road')
+  const canvas = document.querySelector('.paint-canvas')
   return {
     background: road ? getComputedStyle(road).backgroundColor : null,
     paper: road?.classList.contains('is-paper') ?? false,
+    stop: canvas?.getAttribute('data-stop'),
   }
 })
 console.log('contact road', contactRoad)
@@ -110,6 +112,7 @@ check(
   contactRoad.background === 'rgb(10, 10, 10)' && !contactRoad.paper,
   JSON.stringify(contactRoad)
 )
+check('contact ground reaches the last stop', contactRoad.stop === '4', contactRoad.stop)
 await page.locator('.horn-sign').click()
 
 const hornSamples = []

@@ -58,6 +58,7 @@ function check(name, condition, detail) {
 const mix0 = await render({ mix: 0 })
 const mix1 = await render({ mix: 1 })
 const mixHalf = await render({ mix: 0.5 })
+const mixEnd = await render({ mix: 0.999 })
 const stamp = await render({ mix: 0.5, panel: 1 })
 const ticket = await render({ mix: 0.5, panel: 2 })
 const chevron = await render({ mix: 0.5, panel: 3 })
@@ -78,6 +79,40 @@ for (let i = 0; i < mixHalf.length; i += 4) {
   else bPixels += 1
 }
 check('mix 0.5 keeps both pigments', aPixels > 100 && bPixels > 100, `A=${aPixels} B=${bPixels}`)
+
+let endA = 0
+let endNearB = 0
+for (let i = 0; i < mixEnd.length; i += 4) {
+  const pixel = toRgb(mixEnd, i)
+  if (distance(pixel, targetA) < distance(pixel, targetB)) endA += 1
+  if (distance(pixel, targetB) < 20) endNearB += 1
+}
+check('transition does not end on color A', endA < 50, `${endA} A-like pixels at the end`)
+check(
+  'transition resolves to the incoming color',
+  endNearB > WIDTH * HEIGHT * 0.95,
+  `${endNearB} B-like pixels at the end`
+)
+
+const nearB = (pixels) => {
+  let count = 0
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (distance(toRgb(pixels, i), targetB) < 20) count += 1
+  }
+  return count
+}
+const chevronEnd = await render({ mix: 0.999, panel: 3 })
+const inkEnd = await render({ mix: 0.999, panel: 4 })
+check(
+  'chevron resolves to the incoming color',
+  nearB(chevronEnd) > WIDTH * HEIGHT * 0.95,
+  `${nearB(chevronEnd)} B-like pixels`
+)
+check(
+  'ink flood resolves to the incoming color',
+  nearB(inkEnd) > WIDTH * HEIGHT * 0.95,
+  `${nearB(inkEnd)} B-like pixels`
+)
 
 check('About uses a distinct stamp transition', diffCount(stamp, mixHalf) > 200, diffCount(stamp, mixHalf))
 check('Blogs uses a distinct ticket transition', diffCount(ticket, stamp) > 200, diffCount(ticket, stamp))

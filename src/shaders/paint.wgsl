@@ -49,15 +49,17 @@ fn transitionField(panel: f32, uv: vec2f, progress: f32, aspect: f32) -> vec2f {
   } else if (panel > 2.5 && panel < 3.5) {
     // Projects: chevron wipe - a V front sweeps across the ground.
     let chev = uv.x - abs(uv.y - 0.5) * 0.65;
-    let front = progress * 1.4 - 0.2;
-    mask = smoothstep(front - 0.16, front + 0.16, chev);
-    accent = (1.0 - smoothstep(0.0, 0.07, abs(chev - front))) * live;
+    let front = progress * 1.7 - 0.2;
+    let field = 1.0 - chev;
+    mask = 1.0 - smoothstep(front - 0.16, front + 0.16, field);
+    accent = (1.0 - smoothstep(0.0, 0.07, abs(field - front))) * live;
   } else if (panel > 3.5) {
     // Contact: ink flood - a noisy front bleeds across the paper.
     let noise = hash21(floor(uv * vec2f(8.0, 10.0)));
-    let front = progress * 1.3 - 0.15 + (noise - 0.5) * 0.18;
-    mask = smoothstep(front - 0.12, front + 0.12, uv.x);
-    accent = smoothstep(0.0, 0.35, 1.0 - abs(uv.x - front)) * live * 0.4;
+    let front = progress * 1.4 - 0.15 + (noise - 0.5) * 0.18;
+    let field = 1.0 - uv.x;
+    mask = 1.0 - smoothstep(front - 0.12, front + 0.12, field);
+    accent = smoothstep(0.0, 0.35, 1.0 - abs(field - front)) * live * step(front, 1.0) * 0.4;
   }
 
   return vec2f(mask, accent);
@@ -85,8 +87,10 @@ fn transitionField(panel: f32, uv: vec2f, progress: f32, aspect: f32) -> vec2f {
   let style = transitionField(paint.panel, uv, paint.mix, size.x / size.y);
   let coverage = clamp(paint.mix * (0.15 + 0.85 * style.x), 0.0, 1.0);
 
-  // Halftone dots grow from the A ground into the B ground.
-  let radius = sqrt(coverage) * 0.72;
+  // Halftone dots grow from the A ground into the B ground, then fully
+  // resolve to B before the stop switches the palette (no flash of A).
+  let resolve = smoothstep(0.8, 1.0, paint.mix);
+  let radius = sqrt(coverage) * mix(0.72, 1.06, resolve);
   let dotMask = 1.0 - smoothstep(radius - aa, radius + aa, dotDist);
 
   let ink = vec3f(0.039, 0.039, 0.039);

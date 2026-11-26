@@ -9,7 +9,9 @@ export function hexToRgb(hex: string): [number, number, number] {
 
 export function mixForStop(progress: number, stopsCount: number) {
   const last = Math.max(0, stopsCount - 1)
-  const t = Math.max(0, Math.min(last, progress * last))
+  const rawT = progress * last
+  // The track's max scroll can be a fraction short of the exact last stop.
+  const t = rawT >= last - 0.002 ? last : Math.max(0, Math.min(last, rawT))
   const index = Math.floor(t)
   const next = Math.min(index + 1, last)
   const raw = t - index
