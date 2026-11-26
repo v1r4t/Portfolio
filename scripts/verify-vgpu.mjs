@@ -38,10 +38,14 @@ const home = await page.evaluate(() => {
     size: canvas ? [canvas.width, canvas.height] : null,
     stop: canvas?.getAttribute('data-stop'),
     mix: canvas?.getAttribute('data-mix'),
+    portraits: document.querySelectorAll(
+      '.portrait-dots[data-backend="webgpu"], .about-dots[data-backend="webgpu"]'
+    ).length,
   }
 })
 console.log('home', home)
 check('WebGPU backend is active', home.backend === 'webgpu', home.backend)
+check('both portraits use the GPU halftone', home.portraits === 2, home.portraits)
 check('canvas is ready', home.ready === 'true', home.ready)
 check('canvas is sized to the viewport', home.size?.[0] === 1440 && home.size?.[1] === 900, JSON.stringify(home.size))
 check('ground starts on the home stop', home.stop === '0', home.stop)
@@ -103,15 +107,22 @@ await fallbackPage.waitForTimeout(2500)
 
 const fallbackState = await fallbackPage.evaluate(() => {
   const canvas = document.querySelector('.paint-canvas')
+  const cpuPortrait = document.querySelector('.portrait-dots[data-backend="fallback"]')
   return {
     ready: canvas?.getAttribute('data-ready'),
     backend: canvas?.getAttribute('data-backend'),
     body: getComputedStyle(document.body).backgroundColor,
     stop: canvas?.getAttribute('data-stop'),
+    portraits: document.querySelectorAll(
+      '.portrait-dots[data-backend="fallback"], .about-dots[data-backend="fallback"]'
+    ).length,
+    portraitBytes: cpuPortrait ? cpuPortrait.toDataURL().length : 0,
   }
 })
 console.log('fallback', fallbackState)
 check('no-WebGPU browser reports fallback', fallbackState.backend === 'fallback', fallbackState.backend)
+check('both portraits use the CPU fallback', fallbackState.portraits === 2, fallbackState.portraits)
+check('CPU fallback actually paints dots', fallbackState.portraitBytes > 1000, fallbackState.portraitBytes)
 check('fallback canvas is not marked ready', fallbackState.ready === 'false', fallbackState.ready)
 check('fallback keeps the projects pigment', fallbackState.body === 'rgb(255, 46, 136)', fallbackState.body)
 await fallbackPage.screenshot({ path: path.join(OUT, 'fallback-projects.png') })
