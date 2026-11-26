@@ -632,6 +632,26 @@ html, body {
   transform: scale(1.02) rotate(0deg);
   box-shadow: 10px 10px 0 var(--t-ink);
 }
+.blog-card.is-progress {
+  cursor: default;
+  opacity: 0.78;
+}
+.blog-card.is-progress:hover {
+  transform: none;
+  box-shadow: 7px 7px 0 var(--t-ink);
+}
+.blog-status {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--t-ink);
+  background: var(--t-yellow);
+  border: 2px solid var(--t-ink);
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap;
+}
 .blog-num {
   font-family: var(--font-glyph);
   font-size: 2.2rem;

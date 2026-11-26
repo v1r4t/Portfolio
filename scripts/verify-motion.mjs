@@ -53,7 +53,7 @@ const levels = await page.evaluate(async () => {
 console.log('horn levels', levels, 'max', Math.max(...levels))
 
 // Detail page parallax
-await page.goto('http://localhost:3000/projects/desi-neon-kinetic-identity', { waitUntil: 'networkidle' })
+await page.goto('http://localhost:3000/projects/voyaq', { waitUntil: 'networkidle' })
 await page.waitForTimeout(1200)
 const before = await page.evaluate(() => getComputedStyle(document.querySelector('.detail-title')).transform)
 await page.mouse.wheel(0, 600)

@@ -29,6 +29,8 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
     throw new Error(`Blog post "${filename}" has a non-numeric order: ${String(data.order)}`)
   }
 
+  const status = data.status === 'in-progress' ? 'in-progress' : 'published'
+
   return {
     meta: {
       slug,
@@ -38,6 +40,7 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
       summary: String(data.summary),
       tags: (data.tags as string[]) ?? [],
       order,
+      status,
       permitMeta: {
         transitNo: String(permits!.transitNo),
         origin: String(permits!.origin),
@@ -61,7 +64,9 @@ export function getAllPosts(): PostMeta[] {
 }
 
 export function getPostSlugs(): string[] {
-  return getAllPosts().map((post) => post.slug)
+  return getAllPosts()
+    .filter((post) => post.status === 'published')
+    .map((post) => post.slug)
 }
 
 export function getPost(slug: string) {

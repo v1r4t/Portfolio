@@ -124,7 +124,7 @@ const browser = await chromium.launch()
 
 // —— Detail pages ——
 {
-  const { context, page } = await openPage(browser, { url: `${BASE}/projects/desi-neon-kinetic-identity`, viewport: { width: 1440, height: 900 } })
+  const { context, page } = await openPage(browser, { url: `${BASE}/projects/voyaq`, viewport: { width: 1440, height: 900 } })
   results.projectDetailTitle = await page.locator('h1').first().innerText()
   results.projectDetailHasMetrics = (await page.locator('.metric-tile').count()) > 0
   await page.screenshot({ path: path.join(OUT, 'project-detail.png'), fullPage: false })

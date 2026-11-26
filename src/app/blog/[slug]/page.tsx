@@ -34,7 +34,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const post = getPost(slug)
   if (!post) notFound()
 
-  const posts = getAllPosts()
+  const posts = getAllPosts().filter((p) => p.status === 'published')
   const index = posts.findIndex((p) => p.slug === slug)
   const next = posts[(index + 1) % posts.length]
   const { meta, content } = post

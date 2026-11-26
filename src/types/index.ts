@@ -31,6 +31,7 @@ export interface PostMeta {
   summary: string
   tags: string[]
   order: number
+  status: 'published' | 'in-progress'
   permitMeta: {
     transitNo: string
     origin: string

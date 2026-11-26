@@ -31,18 +31,28 @@ export const ContactPanel: React.FC = React.memo(function ContactPanel() {
 
         <div className="contact-body" data-reveal>
           <p className="contact-lede">Have something loud in mind?</p>
-          <a className="contact-email" href="mailto:dhruva.vura@gmail.com" title="Send email to Dhruva">
-            dhruva.vura@gmail.com
+          <a className="contact-email" href="mailto:dhruvav0308@gmail.com" title="Send email to Dhruva">
+            dhruvav0308@gmail.com
           </a>
 
           <div className="contact-meta">
-            <a className="social" href="https://github.com" target="_blank" rel="noreferrer">
+            <a className="social" href="https://github.com/v1r4t/" target="_blank" rel="noreferrer">
               GitHub
             </a>
-            <a className="social" href="https://linkedin.com" target="_blank" rel="noreferrer">
+            <a
+              className="social"
+              href="https://www.linkedin.com/in/dhruva-vura/"
+              target="_blank"
+              rel="noreferrer"
+            >
               LinkedIn
             </a>
-            <a className="social" href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a
+              className="social"
+              href="https://www.instagram.com/dhruvvv.duh"
+              target="_blank"
+              rel="noreferrer"
+            >
               Instagram
             </a>
           </div>

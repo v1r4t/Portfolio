@@ -28,7 +28,7 @@ export const ProjectsPanel: React.FC<{ projects: Project[] }> = React.memo(funct
           </h2>
         </header>
 
-        <Marquee text="SELECTED WORKS ✦ KHAANA EXPRESS ✦ AEROSIGN ✦ CRAFTS PAVILION" className="marquee-projects" />
+        <Marquee text="SELECTED WORKS ✦ VOYAQ ✦ ARTHIQ ✦ JADAL" className="marquee-projects" />
 
         <div className="project-grid">
           {projects.map((project, index) => {
