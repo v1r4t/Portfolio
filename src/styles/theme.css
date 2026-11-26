@@ -1022,25 +1022,6 @@ html, body {
   border-radius: 50%;
   background: var(--t-yellow);
 }
-.road.is-paper {
-  background: var(--t-paper);
-}
-.road.is-paper::before {
-  border-top-color: var(--t-ink);
-  opacity: 0.35;
-}
-.road.is-paper .stop {
-  color: var(--t-ink);
-  opacity: 0.55;
-  border-right-color: rgba(10, 10, 10, 0.12);
-}
-.road.is-paper .stop:hover,
-.road.is-paper .stop:focus-visible {
-  background: rgba(10, 10, 10, 0.06);
-}
-.road.is-paper .stop.is-active::after {
-  background: var(--t-red);
-}
 
 .truck {
   position: fixed;

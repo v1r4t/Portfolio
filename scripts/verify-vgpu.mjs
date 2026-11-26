@@ -97,6 +97,19 @@ await mobile.close()
 
 await page.goto('http://localhost:3000/#contact', { waitUntil: 'networkidle' })
 await page.waitForTimeout(3000)
+const contactRoad = await page.evaluate(() => {
+  const road = document.querySelector('.road')
+  return {
+    background: road ? getComputedStyle(road).backgroundColor : null,
+    paper: road?.classList.contains('is-paper') ?? false,
+  }
+})
+console.log('contact road', contactRoad)
+check(
+  'contact keeps the road black',
+  contactRoad.background === 'rgb(10, 10, 10)' && !contactRoad.paper,
+  JSON.stringify(contactRoad)
+)
 await page.locator('.horn-sign').click()
 
 const hornSamples = []

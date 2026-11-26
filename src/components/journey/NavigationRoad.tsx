@@ -17,8 +17,6 @@ export const NavigationRoad: React.FC<NavigationRoadProps> = ({
   isRoadReady,
   onSelectStop,
 }) => {
-  const isPaper = currentStopIndex === 4
-
   const handleTruckClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     hornAudio.playHorn('melody')
@@ -29,7 +27,7 @@ export const NavigationRoad: React.FC<NavigationRoadProps> = ({
   return (
     <>
       <nav
-        className={`road ${isRoadReady ? 'is-road' : ''} ${isPaper ? 'is-paper' : ''}`}
+        className={`road ${isRoadReady ? 'is-road' : ''}`}
         role="navigation"
         aria-label="Sections"
         aria-hidden={!isRoadReady}
