@@ -7,7 +7,7 @@ Personal portfolio of Dhruva Vura — Indian highway truck art meets high-perfor
 - **Next.js 16** (App Router, Turbopack) + **React 19** + **TypeScript** strict
 - **Tailwind CSS v4** via PostCSS, hand-written design tokens in `src/styles/theme.css`
 - **GSAP** (ScrollTrigger, SplitText) + **Lenis** for journey smoothing, decal type and parallax
-- **vgpu 0.6 + WGSL** paint engine: halftone-dissolve grounds, panel-specific transition masks (stamp, ticket, chevron, ink), and a horn-reactive ripple
+- **vgpu 0.6 + WGSL** paint engine: halftone-dissolve grounds, panel-specific transition masks (stamp, ticket, chevron, ink), a horn-reactive ripple, and a WebGL2 ground fallback
 - **Web Audio** analyser drives the horn-reactive bulb chains
 - **MDX** blog posts (`next-mdx-remote`) with frontmatter (`gray-matter`)
 - `next/font` for the six-voice type system (Teko, Modak, Anek Devanagari, Baloo Tammudu 2, Space Mono, Barlow)

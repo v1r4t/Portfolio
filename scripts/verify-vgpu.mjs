@@ -187,12 +187,52 @@ const fallbackState = await fallbackPage.evaluate(() => {
   }
 })
 console.log('fallback', fallbackState)
-check('no-WebGPU browser reports fallback', fallbackState.backend === 'fallback', fallbackState.backend)
+check('no-WebGPU browser reports WebGL fallback', fallbackState.backend === 'webgl', fallbackState.backend)
+check('WebGL fallback is drawing', fallbackState.ready === 'true', fallbackState.ready)
 check('both portraits use the CPU fallback', fallbackState.portraits === 2, fallbackState.portraits)
 check('CPU fallback actually paints dots', fallbackState.portraitBytes > 1000, fallbackState.portraitBytes)
-check('fallback canvas is not marked ready', fallbackState.ready === 'false', fallbackState.ready)
 check('fallback keeps the projects pigment', fallbackState.body === 'rgb(255, 46, 136)', fallbackState.body)
 await fallbackPage.screenshot({ path: path.join(OUT, 'fallback-projects.png') })
+
+await fallbackPage.evaluate(() => window.dispatchEvent(new CustomEvent('horn-play')))
+await fallbackPage.waitForTimeout(250)
+const fallbackHorn = Number(
+  await fallbackPage.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0)
+)
+check('WebGL fallback reacts to the horn', fallbackHorn > 0.05, fallbackHorn)
+
+const flat = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+await flat.addInitScript(() => {
+  try {
+    delete Navigator.prototype.gpu
+  } catch {
+    /* ignore */
+  }
+  const original = HTMLCanvasElement.prototype.getContext
+  HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+    if (type === 'webgl2' || type === 'webgl') return null
+    return original.call(this, type, ...args)
+  }
+})
+const flatPage = await flat.newPage()
+const flatErrors = []
+flatPage.on('pageerror', (error) => flatErrors.push(error.message))
+await flatPage.goto('http://localhost:3000', { waitUntil: 'networkidle' })
+await flatPage.waitForTimeout(2500)
+const flatState = await flatPage.evaluate(() => {
+  const canvas = document.querySelector('.paint-canvas')
+  return {
+    backend: canvas?.getAttribute('data-backend'),
+    ready: canvas?.getAttribute('data-ready'),
+    body: getComputedStyle(document.body).backgroundColor,
+  }
+})
+console.log('flat', flatState)
+check('no WebGL/WebGPU reports flat fallback', flatState.backend === 'flat', flatState.backend)
+check('flat fallback is not marked ready', flatState.ready === 'false', flatState.ready)
+check('flat fallback keeps the home pigment', flatState.body === 'rgb(69, 16, 122)', flatState.body)
+check('flat fallback has no page errors', flatErrors.length === 0, flatErrors.join('; '))
+await flat.close()
 
 check('WebGPU page has no page errors', errors.length === 0, errors.join('; '))
 check('fallback page has no page errors', fallbackErrors.length === 0, fallbackErrors.join('; '))
