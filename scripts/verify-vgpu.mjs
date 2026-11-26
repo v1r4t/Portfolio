@@ -119,6 +119,88 @@ await fallbackPage.screenshot({ path: path.join(OUT, 'fallback-projects.png') })
 check('WebGPU page has no page errors', errors.length === 0, errors.join('; '))
 check('fallback page has no page errors', fallbackErrors.length === 0, fallbackErrors.join('; '))
 
+// Regression: browser extensions (Bitdefender et al.) inject bis_skin_checked
+// into the server HTML. The layout guard must strip it before hydration, or
+// the poster loader never lifts.
+const extension = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+await extension.addInitScript(() => {
+  const mark = (node) => {
+    if (node.nodeType !== 1) return
+    node.setAttribute('bis_skin_checked', '1')
+    node.setAttribute('bis_register', 'test')
+    node.setAttribute('__processed_test__', 'true')
+    node.querySelectorAll('*').forEach((el) => {
+      el.setAttribute('bis_skin_checked', '1')
+      el.setAttribute('bis_register', 'test')
+      el.setAttribute('__processed_test__', 'true')
+    })
+  }
+  const attach = () => {
+    if (!document.documentElement) return requestAnimationFrame(attach)
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) mutation.addedNodes.forEach(mark)
+    })
+    observer.observe(document.documentElement, { childList: true, subtree: true })
+    mark(document.documentElement)
+    window.addEventListener('load', () => observer.disconnect(), { once: true })
+  }
+  attach()
+})
+const extensionPage = await extension.newPage()
+const extensionErrors = []
+extensionPage.on('pageerror', (error) => extensionErrors.push(error.message))
+await extensionPage.goto('http://localhost:3000', { waitUntil: 'networkidle' })
+await extensionPage.waitForTimeout(4500)
+const extensionState = await extensionPage.evaluate(() => ({
+  loader: Boolean(document.querySelector('.load')),
+  wordmark: document.querySelector('.wordmark')
+    ? getComputedStyle(document.querySelector('.wordmark')).opacity
+    : null,
+  injected: document.querySelectorAll('[bis_skin_checked]').length,
+}))
+check(
+  'extension attributes do not block hydration',
+  !extensionState.loader && extensionState.wordmark === '1' && extensionState.injected === 0,
+  JSON.stringify(extensionState)
+)
+check('extension page has no page errors', extensionErrors.length === 0, extensionErrors.join('; '))
+await extension.close()
+
+// Regression: a stale/partial cached stylesheet once dropped the .track-inner
+// rule, stacking the panels and making the journey unscrollable. The critical
+// inline rule must keep the track horizontal even without that CSS rule.
+const stale = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+const stalePage = await stale.newPage()
+await stalePage.route('**/*.css', async (route) => {
+  const response = await route.fetch()
+  let css = await response.text()
+  css = css.replace(/\.track-inner\s*\{[^}]*\}/g, '')
+  await route.fulfill({ response, body: css })
+})
+await stalePage.goto('http://localhost:3000', { waitUntil: 'networkidle' })
+await stalePage.waitForTimeout(3500)
+const staleLayout = await stalePage.evaluate(() => {
+  const inner = document.querySelector('.track-inner')
+  const track = document.querySelector('.track')
+  return {
+    display: inner ? getComputedStyle(inner).display : null,
+    width: track?.clientWidth,
+    scrollWidth: track?.scrollWidth,
+  }
+})
+check('stale stylesheet keeps the track horizontal', staleLayout.display === 'flex', staleLayout.display)
+check(
+  'stale stylesheet keeps all five panels',
+  staleLayout.scrollWidth === (staleLayout.width ?? 0) * 5,
+  JSON.stringify(staleLayout)
+)
+await stalePage.mouse.move(720, 450)
+await stalePage.mouse.wheel(0, 600)
+await stalePage.waitForTimeout(1400)
+const wheelScrollLeft = await stalePage.evaluate(() => document.querySelector('.track')?.scrollLeft)
+check('wheel scroll moves the journey', (wheelScrollLeft ?? 0) > 0, wheelScrollLeft)
+await stale.close()
+
 await fallback.close()
 await browser.close()
 
