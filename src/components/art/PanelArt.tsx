@@ -86,7 +86,6 @@ const EXTRAS: Record<Variant, React.ReactNode> = {
   ),
   projects: (
     <>
-      <ChevronBand className="chevrons-top" />
       <ChevronBand className="chevrons-bottom" flip />
       <HazardTape className="hazards-bottom" />
     </>

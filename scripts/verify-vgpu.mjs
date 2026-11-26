@@ -49,6 +49,13 @@ check('both portraits use the GPU halftone', home.portraits === 2, home.portrait
 check('canvas is ready', home.ready === 'true', home.ready)
 check('canvas is sized to the viewport', home.size?.[0] === 1440 && home.size?.[1] === 900, JSON.stringify(home.size))
 check('ground starts on the home stop', home.stop === '0', home.stop)
+
+const ornamentAudit = await page.evaluate(() => ({
+  aboutBands: document.querySelectorAll('.painted-band').length,
+  projectTopChevrons: document.querySelectorAll('.projects .chevrons-top').length,
+}))
+check('About has no side bands', ornamentAudit.aboutBands === 0, ornamentAudit.aboutBands)
+check('Projects has no top zigzag', ornamentAudit.projectTopChevrons === 0, ornamentAudit.projectTopChevrons)
 await page.screenshot({ path: path.join(OUT, 'home.png') })
 
 await page.mouse.move(720, 330)

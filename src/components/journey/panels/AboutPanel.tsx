@@ -9,8 +9,6 @@ export const AboutPanel: React.FC = React.memo(function AboutPanel() {
   return (
     <section className="panel about" id="about" aria-labelledby="about-title">
       <PanelArt variant="about" />
-      <div className="painted-band band-left" aria-hidden="true" />
-      <div className="painted-band band-right" aria-hidden="true" />
 
       <div className="panel-inner" data-lenis-prevent-vertical>
         <header className="page-head">

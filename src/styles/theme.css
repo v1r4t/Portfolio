@@ -1284,7 +1284,6 @@ html, body {
   pointer-events: none;
   opacity: 0.95;
 }
-.chevrons-top { top: clamp(14px, 1.6vw, 24px); }
 .chevrons-bottom { bottom: calc(var(--road-h) + 10px); }
 .chevron-band.is-flip { transform: scaleY(-1); }
 
@@ -1452,27 +1451,6 @@ html, body {
   to { transform: translateX(-50%); }
 }
 .marquee-projects { max-width: 980px; }
-
-/* ——— Painted bands (about) ——— */
-.painted-band {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: clamp(10px, 1.4vw, 22px);
-  z-index: 1;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      var(--t-yellow) 0 46px,
-      var(--t-ink) 46px 50px,
-      var(--t-turquoise) 50px 96px,
-      var(--t-ink) 96px 100px
-    );
-  opacity: 0.85;
-}
-.band-left { left: 0; }
-.band-right { right: 0; }
 
 /* ——— Small type accents ——— */
 .blog-permit {
