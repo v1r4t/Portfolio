@@ -123,7 +123,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       orientation: 'horizontal',
       gestureOrientation: 'vertical',
       lerp: 0.11,
-      smoothWheel: true,
+      smoothWheel: false,
       syncTouch: false,
       touchMultiplier: 1.4,
       autoRaf: true,
@@ -171,8 +171,10 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     }
   }, [])
 
-  // Fallback for reduced motion (or a missing Lenis): a vertical wheel gesture
-  // steps to the next/previous panel. Inner vertical scrollers keep priority.
+  // Vertical wheel always steps the horizontal journey. This is deliberately
+  // independent of Lenis's wheel path, which is disabled above, so a stale or
+  // reduced-motion session cannot leave the slides stuck. Inner vertical
+  // scrollers keep priority.
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
@@ -181,7 +183,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     let lastStep = 0
 
     const onWheel = (event: WheelEvent) => {
-      if (lenisRef.current || event.defaultPrevented || event.ctrlKey) return
+      if (event.defaultPrevented || event.ctrlKey) return
       if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return
 
       const target = event.target instanceof Element ? event.target : null
@@ -212,12 +214,18 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
       const width = track.clientWidth
       const current = Math.round(track.scrollLeft / width)
       const next = Math.max(0, Math.min(stops.length - 1, current + direction))
-      track.scrollTo({ left: next * width, behavior: 'auto' })
+      currentIndexRef.current = next
+      setCurrentStopIndex(next)
+      programmaticUntilRef.current = Date.now() + 1400
+      track.scrollTo({
+        left: next * width,
+        behavior: reducedMotion ? 'auto' : 'smooth',
+      })
     }
 
     window.addEventListener('wheel', onWheel, { passive: false })
     return () => window.removeEventListener('wheel', onWheel)
-  }, [stops.length])
+  }, [reducedMotion, stops.length])
 
   // Keyboard navigation
   useEffect(() => {
