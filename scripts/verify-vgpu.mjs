@@ -201,6 +201,26 @@ const wheelScrollLeft = await stalePage.evaluate(() => document.querySelector('.
 check('wheel scroll moves the journey', (wheelScrollLeft ?? 0) > 0, wheelScrollLeft)
 await stale.close()
 
+const wheelReduced = await browser.newContext({
+  viewport: { width: 1440, height: 900 },
+  reducedMotion: 'reduce',
+})
+const wheelReducedPage = await wheelReduced.newPage()
+await wheelReducedPage.goto('http://localhost:3000', { waitUntil: 'networkidle' })
+await wheelReducedPage.waitForTimeout(3000)
+await wheelReducedPage.mouse.move(720, 450)
+await wheelReducedPage.mouse.wheel(0, 700)
+await wheelReducedPage.waitForTimeout(700)
+const reducedScrollLeft = await wheelReducedPage.evaluate(
+  () => document.querySelector('.track')?.scrollLeft
+)
+check(
+  'reduced motion maps vertical wheel to the next panel',
+  reducedScrollLeft === 1440,
+  reducedScrollLeft
+)
+await wheelReduced.close()
+
 await fallback.close()
 await browser.close()
 

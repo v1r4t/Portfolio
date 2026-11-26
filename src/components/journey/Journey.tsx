@@ -171,6 +171,54 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
     }
   }, [])
 
+  // Fallback for reduced motion (or a missing Lenis): a vertical wheel gesture
+  // steps to the next/previous panel. Inner vertical scrollers keep priority.
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    let accumulated = 0
+    let lastStep = 0
+
+    const onWheel = (event: WheelEvent) => {
+      if (lenisRef.current || event.defaultPrevented || event.ctrlKey) return
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return
+
+      const target = event.target instanceof Element ? event.target : null
+      const scroller = target?.closest<HTMLElement>('.panel-inner')
+      if (scroller) {
+        const overflowY = getComputedStyle(scroller).overflowY
+        const canScrollVertically =
+          (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') &&
+          scroller.scrollHeight > scroller.clientHeight
+        if (canScrollVertically) {
+          const atTop = scroller.scrollTop <= 0
+          const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1
+          if ((event.deltaY < 0 && !atTop) || (event.deltaY > 0 && !atBottom)) return
+        }
+      }
+
+      event.preventDefault()
+
+      const now = performance.now()
+      if (now - lastStep < 320) return
+      accumulated += event.deltaY
+      if (Math.abs(accumulated) < 40) return
+
+      const direction = accumulated > 0 ? 1 : -1
+      accumulated = 0
+      lastStep = now
+
+      const width = track.clientWidth
+      const current = Math.round(track.scrollLeft / width)
+      const next = Math.max(0, Math.min(stops.length - 1, current + direction))
+      track.scrollTo({ left: next * width, behavior: 'auto' })
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [stops.length])
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
