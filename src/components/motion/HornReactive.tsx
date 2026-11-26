@@ -9,6 +9,13 @@ import { hornAudio } from '../../utils/audio'
  */
 export function HornReactive() {
   useEffect(() => {
+    void hornAudio.preload()
+    const warm = () => hornAudio.warm()
+    window.addEventListener('pointerdown', warm, { once: true, passive: true })
+    return () => window.removeEventListener('pointerdown', warm)
+  }, [])
+
+  useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     let raf = 0

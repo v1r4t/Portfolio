@@ -1,15 +1,28 @@
 /**
- * Web Audio API synthesizer for the iconic Indian Truck Horn
- * Synthesizes vintage brass bulb horn & melodic dual-tone air-horns.
- * Also exposes a live analyser so the page can react to the horn's waveform.
+ * Web Audio player for the recorded Indian bus horn.
+ * The MP3 runs through the analyser so the bulbs, portrait, and ground shader
+ * still react to the live waveform.
  */
+
+const HORN_SRC = '/indian-bus-horn.mp3'
 
 class HornAudioEngine {
   private ctx: AudioContext | null = null
   private analyser: AnalyserNode | null = null
   private waveform: Float32Array<ArrayBuffer> | null = null
+  private buffer: AudioBuffer | null = null
+  private loadPromise: Promise<AudioBuffer> | null = null
+  private activeSource: AudioBufferSourceNode | null = null
 
   private getContext(): AudioContext {
+    const ctx = this.ensureContext()
+    if (ctx.state === 'suspended') {
+      void ctx.resume()
+    }
+    return ctx
+  }
+
+  private ensureContext(): AudioContext {
     if (!this.ctx) {
       const AudioCtx =
         window.AudioContext ||
@@ -23,31 +36,91 @@ class HornAudioEngine {
       this.analyser.connect(this.ctx.destination)
       this.waveform = new Float32Array(this.analyser.fftSize)
     }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume()
-    }
     return this.ctx
   }
 
-  /** Classic two-tone brass bulb horn "Poon-Poon!" */
+  /** Fetch and decode the horn before the first click so playback is immediate. */
+  public async preload(): Promise<void> {
+    try {
+      await this.ensureBuffer(this.ensureContext())
+    } catch {
+      /* playHorn retries on demand */
+    }
+  }
+
+  /** Resume the audio clock on an early user gesture, before the horn click. */
+  public warm(): void {
+    try {
+      const ctx = this.ensureContext()
+      if (ctx.state === 'suspended') void ctx.resume()
+    } catch {
+      /* playHorn retries on demand */
+    }
+  }
+
+  private async ensureBuffer(ctx: AudioContext): Promise<AudioBuffer> {
+    if (this.buffer) return this.buffer
+    if (!this.loadPromise) {
+      this.loadPromise = fetch(HORN_SRC)
+        .then((response) => {
+          if (!response.ok) throw new Error(`Horn audio failed: ${response.status}`)
+          return response.arrayBuffer()
+        })
+        .then((data) => ctx.decodeAudioData(data))
+        .then((decoded) => {
+          this.buffer = decoded
+          return decoded
+        })
+        .catch((error) => {
+          this.loadPromise = null
+          throw error
+        })
+    }
+    return this.loadPromise
+  }
+
+  /** Plays the recorded bus horn. Both buttons use the same authentic sound. */
   public playHorn(type: 'brass' | 'melody' = 'brass') {
     try {
       const ctx = this.getContext()
-      const now = ctx.currentTime
+      // Start the visual reaction immediately; the file may decode a beat later.
+      window.dispatchEvent(new CustomEvent('horn-play', { detail: { type } }))
+      void this.playFile(ctx)
+    } catch (error) {
+      console.warn('AudioContext unavailable or blocked', error)
+    }
+  }
 
-      if (type === 'brass') {
-        this.playTonePair(ctx, now, 420, 560, 0.28)
-        this.playTonePair(ctx, now + 0.32, 420, 560, 0.42)
-      } else {
-        // Melodic Highway Pass Horn ("Ta-Ta-Taaaa!")
-        this.playTonePair(ctx, now, 392, 523, 0.18)
-        this.playTonePair(ctx, now + 0.22, 440, 587, 0.18)
-        this.playTonePair(ctx, now + 0.44, 523, 659, 0.48)
+  private async playFile(ctx: AudioContext) {
+    try {
+      const buffer = await this.ensureBuffer(ctx)
+
+      if (this.activeSource) {
+        try {
+          this.activeSource.stop()
+        } catch {
+          /* already ended */
+        }
+        this.activeSource = null
       }
 
-      window.dispatchEvent(new CustomEvent('horn-play', { detail: { type } }))
-    } catch (e) {
-      console.warn('AudioContext unavailable or blocked', e)
+      const source = ctx.createBufferSource()
+      const gain = ctx.createGain()
+      source.buffer = buffer
+      gain.gain.value = 0.9
+      source.connect(gain)
+      gain.connect(this.analyser ?? ctx.destination)
+
+      source.onended = () => {
+        source.disconnect()
+        gain.disconnect()
+        if (this.activeSource === source) this.activeSource = null
+      }
+
+      this.activeSource = source
+      source.start()
+    } catch (error) {
+      console.warn('Horn audio unavailable', error)
     }
   }
 
@@ -61,43 +134,6 @@ class HornAudioEngine {
       sum += this.waveform[i] * this.waveform[i]
     }
     return Math.min(1, Math.sqrt(sum / this.waveform.length) * 6)
-  }
-
-  private playTonePair(ctx: AudioContext, startTime: number, freq1: number, freq2: number, duration: number) {
-    const osc1 = ctx.createOscillator()
-    const osc2 = ctx.createOscillator()
-    const gain = ctx.createGain()
-    const filter = ctx.createBiquadFilter()
-
-    osc1.type = 'sawtooth'
-    osc2.type = 'triangle'
-
-    osc1.frequency.setValueAtTime(freq1, startTime)
-    osc2.frequency.setValueAtTime(freq2, startTime)
-
-    osc1.frequency.exponentialRampToValueAtTime(freq1 * 1.04, startTime + 0.05)
-    osc2.frequency.exponentialRampToValueAtTime(freq2 * 1.04, startTime + 0.05)
-    osc1.frequency.exponentialRampToValueAtTime(freq1, startTime + duration)
-    osc2.frequency.exponentialRampToValueAtTime(freq2, startTime + duration)
-
-    filter.type = 'bandpass'
-    filter.frequency.setValueAtTime(800, startTime)
-    filter.Q.setValueAtTime(2.2, startTime)
-
-    gain.gain.setValueAtTime(0.0001, startTime)
-    gain.gain.exponentialRampToValueAtTime(0.35, startTime + 0.04)
-    gain.gain.exponentialRampToValueAtTime(0.28, startTime + duration * 0.7)
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration)
-
-    osc1.connect(filter)
-    osc2.connect(filter)
-    filter.connect(gain)
-    gain.connect(this.analyser ?? ctx.destination)
-
-    osc1.start(startTime)
-    osc2.start(startTime)
-    osc1.stop(startTime + duration + 0.05)
-    osc2.stop(startTime + duration + 0.05)
   }
 }
 
