@@ -1,3 +1,20 @@
+export interface CaseStudyFeature {
+  title: string
+  description: string
+}
+
+export interface CaseStudyStep {
+  title: string
+  description: string
+}
+
+export interface CaseStudyDecision {
+  title: string
+  choice: string
+  why: string
+  tradeoff: string
+}
+
 export interface Project {
   id: string
   slug: string
@@ -19,12 +36,19 @@ export interface Project {
     client: string
     timeline: string
     role: string
+    status?: string
+    team?: string[]
     overview: string
     challenge: string
+    constraints?: string[]
     solution: string
+    features?: CaseStudyFeature[]
+    architecture?: CaseStudyStep[]
+    decisions?: CaseStudyDecision[]
     deliverables: string[]
     toolsUsed: string[]
     metrics?: { label: string; value: string }[]
+    nextSteps?: string[]
   }
 }
 

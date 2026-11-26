@@ -79,7 +79,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <dt>Role</dt>
             <dd>{caseStudy.role}</dd>
           </div>
+          {caseStudy.status && (
+            <div>
+              <dt>Status</dt>
+              <dd>{caseStudy.status}</dd>
+            </div>
+          )}
         </dl>
+
+        {caseStudy.team && (
+          <p className="case-team">
+            <span>Team</span> {caseStudy.team.join(' · ')}
+          </p>
+        )}
 
         {(project.links?.live || project.links?.github || project.links?.linkedin) && (
           <div className="project-links">
@@ -103,36 +115,92 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <section className="case-block">
           <h2>Overview</h2>
-          <p>{caseStudy.overview}</p>
+          <p className="case-lede">{caseStudy.overview}</p>
         </section>
 
         <section className="case-block">
-          <h2>The Challenge</h2>
+          <h2>The Problem</h2>
           <p>{caseStudy.challenge}</p>
+          {caseStudy.constraints && caseStudy.constraints.length > 0 && (
+            <ul className="tick-list case-constraints">
+              {caseStudy.constraints.map((constraint) => (
+                <li key={constraint}>{constraint}</li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="case-block">
-          <h2>The Solution</h2>
+          <h2>The Approach</h2>
           <p>{caseStudy.solution}</p>
         </section>
 
-        <section className="case-block">
-          <h2>Deliverables</h2>
-          <ul className="tick-list">
-            {caseStudy.deliverables.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
+        {caseStudy.features && caseStudy.features.length > 0 && (
+          <section className="case-block">
+            <h2>What It Does</h2>
+            <div className="feature-grid">
+              {caseStudy.features.map((feature, index) => (
+                <article className="feature-card" key={feature.title}>
+                  <span className="feature-num">0{index + 1}</span>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
-        <section className="case-block">
-          <h2>Tools</h2>
-          <div className="tags">
-            {caseStudy.toolsUsed.map((tool) => (
-              <span key={tool}>{tool}</span>
-            ))}
-          </div>
-        </section>
+        {caseStudy.architecture && caseStudy.architecture.length > 0 && (
+          <section className="case-block">
+            <h2>How It Works</h2>
+            <ol className="flow-list">
+              {caseStudy.architecture.map((step) => (
+                <li key={step.title}>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {caseStudy.decisions && caseStudy.decisions.length > 0 && (
+          <section className="case-block">
+            <h2>Key Decisions</h2>
+            <div className="decision-grid">
+              {caseStudy.decisions.map((decision) => (
+                <article className="decision-card" key={decision.title}>
+                  <h3>{decision.title}</h3>
+                  <p className="decision-choice">{decision.choice}</p>
+                  <p>{decision.why}</p>
+                  <p className="decision-tradeoff">
+                    <b>Tradeoff:</b> {decision.tradeoff}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div className="case-columns">
+          <section className="case-block">
+            <h2>Deliverables</h2>
+            <ul className="tick-list">
+              {caseStudy.deliverables.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="case-block">
+            <h2>Tools</h2>
+            <div className="tags">
+              {caseStudy.toolsUsed.map((tool) => (
+                <span key={tool}>{tool}</span>
+              ))}
+            </div>
+          </section>
+        </div>
 
         {caseStudy.metrics && caseStudy.metrics.length > 0 && (
           <section className="case-block">
@@ -145,6 +213,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </div>
               ))}
             </div>
+          </section>
+        )}
+
+        {caseStudy.nextSteps && caseStudy.nextSteps.length > 0 && (
+          <section className="case-block">
+            <h2>What I’d Build Next</h2>
+            <ul className="tick-list">
+              {caseStudy.nextSteps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ul>
           </section>
         )}
 

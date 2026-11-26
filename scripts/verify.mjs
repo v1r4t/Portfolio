@@ -127,6 +127,8 @@ const browser = await chromium.launch()
   const { context, page } = await openPage(browser, { url: `${BASE}/projects/voyaq`, viewport: { width: 1440, height: 900 } })
   results.projectDetailTitle = await page.locator('h1').first().innerText()
   results.projectDetailHasMetrics = (await page.locator('.metric-tile').count()) > 0
+  results.projectDetailFeatures = await page.locator('.feature-card').count()
+  results.projectDetailDecisions = await page.locator('.decision-card').count()
   await page.screenshot({ path: path.join(OUT, 'project-detail.png'), fullPage: false })
   await context.close()
 
