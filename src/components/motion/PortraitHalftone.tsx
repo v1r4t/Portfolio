@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   effect,
   frame,
-  init,
   sampler,
   surface,
   texture,
@@ -16,6 +15,7 @@ import {
 import { hornAudio } from '../../utils/audio'
 import { paintPortraitHalftone } from '../../utils/portraitHalftone'
 import portraitShader from '../../shaders/portrait.wgsl'
+import { useSharedGpu } from './GpuProvider'
 
 const MAX_DPR = 2
 const HORN_DURATION = 1.5
@@ -76,6 +76,7 @@ export function PortraitHalftone({
   imageClassName,
   canvasClassName,
 }: PortraitHalftoneProps) {
+  const { gpu: sharedGpu, status } = useSharedGpu()
   const imgRef = useRef<HTMLImageElement | null>(null)
   const gpuCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const cpuCanvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -95,6 +96,11 @@ export function PortraitHalftone({
       rafRef.current = 0
       const runtime = runtimeRef.current
       if (!runtime) return
+      const canvas = gpuCanvasRef.current
+      if (canvas) {
+        canvas.dataset.horn = stateRef.current.horn.toFixed(3)
+        canvas.dataset.strength = stateRef.current.strength.toFixed(3)
+      }
       runtime.effect.set({ params: buildParams(stateRef.current, runtime.surface.size) })
       frame(runtime.gpu, (currentFrame) => {
         currentFrame.pass({ target: runtime.surface, clear: [0, 0, 0, 0] }, runtime.effect)
@@ -107,14 +113,15 @@ export function PortraitHalftone({
     const img = imgRef.current
     if (!canvas || !img) return
 
-    if (!('gpu' in navigator)) {
+    if (status === 'unavailable') {
       setBackend('fallback')
       return
     }
+    if (!sharedGpu) return
 
+    const gpu = sharedGpu
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let disposed = false
-    let gpu: Gpu | null = null
     let canvasSurface: Surface | null = null
     let portraitEffect: Effect | null = null
     let photo: Texture | null = null
@@ -123,10 +130,9 @@ export function PortraitHalftone({
 
     const resize = () => {
       if (!canvasSurface) return
-      const rect = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
-      const width = Math.max(1, Math.round(rect.width * dpr))
-      const height = Math.max(1, Math.round(rect.height * dpr))
+      const width = Math.max(1, Math.round(canvas.clientWidth * dpr))
+      const height = Math.max(1, Math.round(canvas.clientHeight * dpr))
       if (canvasSurface.size[0] !== width || canvasSurface.size[1] !== height) {
         canvasSurface.resize([width, height])
       }
@@ -165,12 +171,6 @@ export function PortraitHalftone({
         await img.decode()
         if (disposed) return
 
-        gpu = await init({ powerPreference: 'high-performance' })
-        if (disposed) {
-          gpu.dispose()
-          return
-        }
-
         canvasSurface = surface(gpu, canvas, {
           autoResize: false,
           dpr: [1, MAX_DPR],
@@ -180,7 +180,6 @@ export function PortraitHalftone({
         if (disposed) {
           bitmap.close()
           canvasSurface.dispose()
-          gpu.dispose()
           return
         }
 
@@ -213,7 +212,6 @@ export function PortraitHalftone({
           portraitEffect.dispose()
           photo.destroy()
           canvasSurface.dispose()
-          gpu.dispose()
           return
         }
 
@@ -229,23 +227,12 @@ export function PortraitHalftone({
           window.addEventListener('blur', clearPointer)
           window.addEventListener('scroll', clearPointer, true)
         }
-
-        void gpu.lost.then(() => {
-          if (disposed) return
-          runtimeRef.current = null
-          setBackend('fallback')
-          portraitEffect?.dispose()
-          photo?.destroy()
-          canvasSurface?.dispose()
-          gpu?.dispose()
-        })
       } catch (error) {
         console.warn('WebGPU portrait halftone unavailable; using CPU fallback.', error)
         if (!disposed) setBackend('fallback')
         portraitEffect?.dispose()
         photo?.destroy()
         canvasSurface?.dispose()
-        gpu?.dispose()
       }
     })()
 
@@ -263,9 +250,8 @@ export function PortraitHalftone({
       portraitEffect?.dispose()
       photo?.destroy()
       canvasSurface?.dispose()
-      gpu?.dispose()
     }
-  }, [requestRender])
+  }, [requestRender, sharedGpu, status])
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return

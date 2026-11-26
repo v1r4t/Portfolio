@@ -394,7 +394,16 @@ html, body {
 
 @media (max-width: 700px) {
   .name-side { display: none; }
-  .portrait-wrap { height: 72%; }
+  .portrait-wrap {
+    height: auto;
+    width: min(100vw, 54vh);
+    aspect-ratio: 1086 / 1448;
+  }
+  .portrait {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
   :root { --word-size: clamp(5.25rem, 22vw, 8rem); }
   .top-word { top: 8vh; }
   .wordmark {

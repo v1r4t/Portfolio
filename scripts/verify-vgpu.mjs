@@ -51,19 +51,73 @@ check('canvas is sized to the viewport', home.size?.[0] === 1440 && home.size?.[
 check('ground starts on the home stop', home.stop === '0', home.stop)
 await page.screenshot({ path: path.join(OUT, 'home.png') })
 
+await page.mouse.move(720, 330)
+await page.waitForTimeout(300)
+const portraitStrength = await page.evaluate(
+  () => document.querySelector('.portrait-dots[data-backend="webgpu"]')?.getAttribute('data-strength')
+)
+check('pointer swells the portrait dots', Number(portraitStrength) === 1, portraitStrength)
+
+const mobile = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  deviceScaleFactor: 2,
+})
+const mobilePage = await mobile.newPage()
+await mobilePage.goto('http://localhost:3000', { waitUntil: 'networkidle' })
+await mobilePage.waitForTimeout(3500)
+const mobilePortrait = await mobilePage.evaluate(() => {
+  const canvas = document.querySelector('.portrait-dots[data-backend="webgpu"]')
+  const img = document.querySelector('.portrait')
+  const canvasRect = canvas?.getBoundingClientRect()
+  const imgRect = img?.getBoundingClientRect()
+  return {
+    backend: canvas?.getAttribute('data-backend'),
+    width: canvas?.width,
+    cssWidth: canvasRect?.width,
+    cssHeight: canvasRect?.height,
+    imgWidth: imgRect?.width,
+    imgHeight: imgRect?.height,
+  }
+})
+console.log('mobile portrait', mobilePortrait)
+check('mobile portrait uses the GPU path', mobilePortrait.backend === 'webgpu', mobilePortrait.backend)
+check(
+  'mobile portrait renders at DPR 2',
+  Math.abs((mobilePortrait.width ?? 0) - Math.round((mobilePortrait.cssWidth ?? 0) * 2)) <= 1,
+  JSON.stringify(mobilePortrait)
+)
+check(
+  'portrait canvas matches the image bounds',
+  Math.abs((mobilePortrait.cssWidth ?? 0) - (mobilePortrait.imgWidth ?? 0)) <= 1 &&
+    Math.abs((mobilePortrait.cssHeight ?? 0) - (mobilePortrait.imgHeight ?? 0)) <= 1,
+  JSON.stringify(mobilePortrait)
+)
+await mobilePage.screenshot({ path: path.join(OUT, 'mobile-portrait.png') })
+await mobile.close()
+
 await page.goto('http://localhost:3000/#contact', { waitUntil: 'networkidle' })
 await page.waitForTimeout(3000)
 await page.locator('.horn-sign').click()
 
 const hornSamples = []
+const portraitHornSamples = []
 for (let i = 0; i < 20; i++) {
   await page.waitForTimeout(80)
-  hornSamples.push(Number(await page.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0)))
+  const sample = await page.evaluate(() => ({
+    ground: Number(document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0),
+    portrait: Number(
+      document.querySelector('.portrait-dots[data-backend="webgpu"]')?.getAttribute('data-horn') ?? 0
+    ),
+  }))
+  hornSamples.push(sample.ground)
+  portraitHornSamples.push(sample.portrait)
   if (i === 4) await page.screenshot({ path: path.join(OUT, 'horn.png') })
 }
 const hornMax = Math.max(...hornSamples)
-console.log('horn max', hornMax)
+const portraitHornMax = Math.max(...portraitHornSamples)
+console.log('horn max', hornMax, 'portrait', portraitHornMax)
 check('horn drives the ripple', hornMax > 0.05, hornMax)
+check('horn pulses the portrait dots', portraitHornMax > 0.05, portraitHornMax)
 
 await page.waitForTimeout(600)
 const hornAfter = Number(await page.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0))
@@ -80,6 +134,19 @@ await reducedPage.locator('.horn-sign').click()
 await reducedPage.waitForTimeout(300)
 const reducedHorn = Number(await reducedPage.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0))
 check('reduced motion skips the ripple', reducedHorn === 0, reducedHorn)
+
+const reducedPortrait = await reducedPage.evaluate(() => {
+  const canvas = document.querySelector('.portrait-dots[data-backend="webgpu"]')
+  return {
+    horn: canvas?.getAttribute('data-horn'),
+    strength: canvas?.getAttribute('data-strength'),
+  }
+})
+check(
+  'reduced motion keeps the portrait static',
+  Number(reducedPortrait.horn) === 0 && Number(reducedPortrait.strength) === 0,
+  JSON.stringify(reducedPortrait)
+)
 
 await reducedPage.evaluate(() => {
   const track = document.querySelector('.track')
@@ -230,6 +297,38 @@ check(
   reducedScrollLeft === 1440,
   reducedScrollLeft
 )
+
+for (let i = 0; i < 3; i++) {
+  await wheelReducedPage.mouse.wheel(0, 700)
+  await wheelReducedPage.waitForTimeout(500)
+}
+const lastPanel = await wheelReducedPage.evaluate(
+  () => document.querySelector('.track')?.scrollLeft
+)
+check('wheel reaches the last panel', lastPanel === 5760, lastPanel)
+
+await wheelReducedPage.mouse.wheel(0, 700)
+await wheelReducedPage.waitForTimeout(500)
+const afterLast = await wheelReducedPage.evaluate(
+  () => document.querySelector('.track')?.scrollLeft
+)
+check('wheel clamps at the last panel', afterLast === 5760, afterLast)
+
+for (let i = 0; i < 4; i++) {
+  await wheelReducedPage.mouse.wheel(0, -700)
+  await wheelReducedPage.waitForTimeout(500)
+}
+const firstPanel = await wheelReducedPage.evaluate(
+  () => document.querySelector('.track')?.scrollLeft
+)
+check('wheel returns to the first panel', firstPanel === 0, firstPanel)
+
+await wheelReducedPage.mouse.wheel(0, -700)
+await wheelReducedPage.waitForTimeout(500)
+const beforeFirst = await wheelReducedPage.evaluate(
+  () => document.querySelector('.track')?.scrollLeft
+)
+check('wheel clamps at the first panel', beforeFirst === 0, beforeFirst)
 await wheelReduced.close()
 
 await fallback.close()

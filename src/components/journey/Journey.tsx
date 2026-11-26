@@ -12,6 +12,7 @@ import { BlogsPanel } from './panels/BlogsPanel'
 import { ProjectsPanel } from './panels/ProjectsPanel'
 import { ContactPanel } from './panels/ContactPanel'
 import { PaintCanvas } from '../motion/PaintCanvas'
+import { GpuProvider } from '../motion/GpuProvider'
 import { InkCursor } from '../motion/InkCursor'
 import { HornReactive } from '../motion/HornReactive'
 
@@ -329,7 +330,8 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
   const handleExplore = useCallback(() => scrollToStop(1), [scrollToStop])
 
   return (
-    <div className="journey">
+    <GpuProvider>
+      <div className="journey">
       <PaintCanvas progress={scrollProgress} stops={stops} />
       <InkCursor />
       <HornReactive />
@@ -367,6 +369,7 @@ export const Journey: React.FC<JourneyProps> = ({ stops, projects, posts }) => {
         isRoadReady={isRoadReady}
         onSelectStop={scrollToStop}
       />
-    </div>
+      </div>
+    </GpuProvider>
   )
 }

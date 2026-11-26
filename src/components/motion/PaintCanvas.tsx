@@ -1,10 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { effect, frame, init, surface, type Effect, type Gpu, type Surface } from 'vgpu'
+import { effect, frame, surface, type Effect, type Gpu, type Surface } from 'vgpu'
 import type { NavStop } from '../../types'
 import { hornAudio } from '../../utils/audio'
 import paintShader from '../../shaders/paint.wgsl'
+import { useSharedGpu } from './GpuProvider'
 
 const MAX_DPR = 1.5
 const HORN_DURATION = 1.5
@@ -92,6 +93,7 @@ function syncDataset(canvas: HTMLCanvasElement, state: PaintState, stops: NavSto
  * progress, size, or the horn animation changes.
  */
 export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
+  const { gpu: sharedGpu, status } = useSharedGpu()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const runtimeRef = useRef<PaintRuntime | null>(null)
   const stopsRef = useRef(stops)
@@ -121,23 +123,23 @@ export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    if (!('gpu' in navigator)) {
+    if (status === 'unavailable') {
       setBackend('fallback')
       return
     }
+    if (!sharedGpu) return
 
+    const gpu = sharedGpu
     let disposed = false
-    let gpu: Gpu | null = null
     let canvasSurface: Surface | null = null
     let paintEffect: Effect | null = null
     let resizeObserver: ResizeObserver | null = null
 
     const resize = () => {
       if (!canvasSurface) return
-      const rect = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
-      const width = Math.max(1, Math.round(rect.width * dpr))
-      const height = Math.max(1, Math.round(rect.height * dpr))
+      const width = Math.max(1, Math.round(canvas.clientWidth * dpr))
+      const height = Math.max(1, Math.round(canvas.clientHeight * dpr))
       if (canvasSurface.size[0] !== width || canvasSurface.size[1] !== height) {
         canvasSurface.resize([width, height])
       }
@@ -157,12 +159,6 @@ export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
 
     void (async () => {
       try {
-        gpu = await init({ powerPreference: 'high-performance' })
-        if (disposed) {
-          gpu.dispose()
-          return
-        }
-
         canvasSurface = surface(gpu, canvas, { autoResize: false, dpr: [1, MAX_DPR] })
         const params = buildParams(stateRef.current, stopsRef.current, canvasSurface.size)
         paintEffect = effect(gpu, paintShader, {
@@ -174,7 +170,6 @@ export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
         if (disposed) {
           paintEffect.dispose()
           canvasSurface.dispose()
-          gpu.dispose()
           return
         }
 
@@ -186,21 +181,11 @@ export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
         resizeObserver.observe(canvas)
         window.addEventListener('resize', resize)
         window.addEventListener('pointerdown', onPointerDown, { passive: true })
-
-        void gpu.lost.then(() => {
-          if (disposed) return
-          runtimeRef.current = null
-          setBackend('fallback')
-          paintEffect?.dispose()
-          canvasSurface?.dispose()
-          gpu?.dispose()
-        })
       } catch (error) {
         console.warn('WebGPU paint engine unavailable; using flat pigment.', error)
         if (!disposed) setBackend('fallback')
         paintEffect?.dispose()
         canvasSurface?.dispose()
-        gpu?.dispose()
       }
     })()
 
@@ -214,9 +199,8 @@ export function PaintCanvas({ progress, stops }: PaintCanvasProps) {
       runtimeRef.current = null
       paintEffect?.dispose()
       canvasSurface?.dispose()
-      gpu?.dispose()
     }
-  }, [requestRender])
+  }, [requestRender, sharedGpu, status])
 
   useEffect(() => {
     stopsRef.current = stops
