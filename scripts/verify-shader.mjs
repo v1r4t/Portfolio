@@ -1,0 +1,90 @@
+import { readFileSync } from 'node:fs'
+import { effect, frame, init, target } from 'vgpu/node'
+import { prepareShader } from '@vgpu/wgsl/prepare'
+
+const WIDTH = 64
+const HEIGHT = 64
+const shaderPath = new URL('../src/shaders/paint.wgsl', import.meta.url)
+
+const shader = prepareShader(readFileSync(shaderPath, 'utf8'))
+const gpu = await init()
+const colorTarget = target(gpu, { size: [WIDTH, HEIGHT], format: 'rgba8unorm' })
+
+const base = {
+  colorA: [0.27, 0.06, 0.48, 1],
+  colorB: [1, 0.18, 0.53, 1],
+  resolution: [WIDTH, HEIGHT],
+  hornOrigin: [WIDTH / 2, HEIGHT / 2],
+  mix: 0,
+  horn: 0,
+  hornAge: 0,
+  _pad: 0,
+}
+
+const paint = effect(gpu, shader, { set: { paint: base } })
+await paint.compile(colorTarget)
+
+async function render(patch) {
+  paint.set({ paint: { ...base, ...patch } })
+  frame(gpu, (current) => current.pass(colorTarget, paint))
+  return colorTarget.color.read({ mipLevel: 0, region: 'all' })
+}
+
+const toRgb = (pixels, index) => [pixels[index], pixels[index + 1], pixels[index + 2]]
+const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2])
+const centerIndex = (Math.floor(HEIGHT / 2) * WIDTH + Math.floor(WIDTH / 2)) * 4
+const cornerIndex = 0
+const targetA = [69, 15, 122]
+const targetB = [255, 46, 136]
+
+let failures = 0
+
+function check(name, condition, detail) {
+  if (condition) {
+    console.log(`✓ ${name}`)
+    return
+  }
+  failures += 1
+  console.error(`✗ ${name}: ${detail}`)
+}
+
+const mix0 = await render({ mix: 0 })
+const mix1 = await render({ mix: 1 })
+const mixHalf = await render({ mix: 0.5 })
+const hornOn = await render({ mix: 0.5, horn: 1, hornAge: 0.35 })
+const hornOff = await render({ mix: 0.5, horn: 0, hornAge: 0.35 })
+
+const centerA = toRgb(mix0, cornerIndex)
+const centerB = toRgb(mix1, centerIndex)
+check('mix 0 is color A', distance(centerA, targetA) < 20, `${centerA} vs ${targetA}`)
+check('mix 1 is color B', distance(centerB, targetB) < 12, `${centerB} vs ${targetB}`)
+
+let aPixels = 0
+let bPixels = 0
+for (let i = 0; i < mixHalf.length; i += 4) {
+  const pixel = toRgb(mixHalf, i)
+  if (distance(pixel, targetA) < distance(pixel, targetB)) aPixels += 1
+  else bPixels += 1
+}
+check('mix 0.5 keeps both pigments', aPixels > 100 && bPixels > 100, `A=${aPixels} B=${bPixels}`)
+
+let hornDiff = 0
+for (let i = 0; i < hornOn.length; i += 4) {
+  if (
+    hornOn[i] !== hornOff[i] ||
+    hornOn[i + 1] !== hornOff[i + 1] ||
+    hornOn[i + 2] !== hornOff[i + 2]
+  ) {
+    hornDiff += 1
+  }
+}
+check('horn ripple changes the ground', hornDiff > 100, `${hornDiff} pixels changed`)
+
+if (failures > 0) {
+  console.error(`\n${failures} shader check(s) failed`)
+  gpu.dispose()
+  process.exit(1)
+}
+
+console.log('\npaint shader checks passed')
+gpu.dispose()

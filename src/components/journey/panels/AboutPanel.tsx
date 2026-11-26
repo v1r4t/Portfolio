@@ -111,7 +111,7 @@ export const AboutPanel: React.FC = React.memo(function AboutPanel() {
               </div>
               <div>
                 <dt>Tools</dt>
-                <dd>React 19, TypeScript, GLSL, Figma</dd>
+                <dd>React 19, TypeScript, WGSL, Figma</dd>
               </div>
               <div>
                 <dt>Status</dt>

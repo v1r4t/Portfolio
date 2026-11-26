@@ -7,7 +7,7 @@ Personal portfolio of Dhruva Vura — Indian highway truck art meets high-perfor
 - **Next.js 16** (App Router, Turbopack) + **React 19** + **TypeScript** strict
 - **Tailwind CSS v4** via PostCSS, hand-written design tokens in `src/styles/theme.css`
 - **GSAP** (ScrollTrigger, SplitText) + **Lenis** for journey smoothing, decal type and parallax
-- **Three.js + custom GLSL** paint engine: halftone-dissolve grounds with ink edges
+- **vgpu 0.6 + WGSL** paint engine: halftone-dissolve grounds with ink edges and a horn-reactive ripple
 - **Web Audio** analyser drives the horn-reactive bulb chains
 - **MDX** blog posts (`next-mdx-remote`) with frontmatter (`gray-matter`)
 - `next/font` for the six-voice type system (Teko, Modak, Anek Devanagari, Baloo Tammudu 2, Space Mono, Barlow)
@@ -42,12 +42,16 @@ npm run start
 
 ## Verification
 
-`scripts/verify.mjs` is a Playwright smoke test: panels, scroll math, hash restore (/#projects), keyboard nav, reduced motion, overlay pointer discipline, and detail routes. `scripts/verify-motion.mjs` checks the motion layers: loader counter, ink cursor, horn analyser levels, hero parallax and mobile WebGL. Run with the dev server up:
+`scripts/verify.mjs` is a Playwright smoke test: panels, scroll math, hash restore (/#projects), keyboard nav, reduced motion, overlay pointer discipline, and detail routes. `scripts/verify-vgpu.mjs` checks the WebGPU paint engine and the flat fallback; `npm run verify:shader` renders the WGSL headlessly and asserts the pigments and horn ripple. Run the browser checks with the dev server up:
 
 ```bash
 npm install --no-save playwright
+npx playwright install chromium
 node scripts/verify.mjs
-node scripts/verify-motion.mjs
+npm run verify:vgpu
+npm run verify:shader
 ```
+
+`verify:vgpu` prefers the system Edge channel on Windows (needed for headless WebGPU) and falls back to Playwright Chromium.
 
 Design docs: `docs/superpowers/plans/2026-11-24-portfolio-rebuild.md` (plan).

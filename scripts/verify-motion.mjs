@@ -68,7 +68,12 @@ await mobile.goto('http://localhost:3000', { waitUntil: 'networkidle' })
 await mobile.waitForTimeout(3200)
 const mobileCanvas = await mobile.evaluate(() => {
   const c = document.querySelector('.paint-canvas')
-  return { ready: c?.getAttribute('data-ready'), width: c?.width, height: c?.height }
+  return {
+    ready: c?.getAttribute('data-ready'),
+    backend: c?.getAttribute('data-backend'),
+    width: c?.width,
+    height: c?.height,
+  }
 })
 await mobile.screenshot({ path: path.join(OUT, 'mobile-motion.png') })
 console.log('mobile canvas', mobileCanvas)

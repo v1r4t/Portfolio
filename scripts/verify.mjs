@@ -63,7 +63,11 @@ const browser = await chromium.launch()
 
   results.paintCanvas = await page.evaluate(() => {
     const canvas = document.querySelector('.paint-canvas')
-    return { exists: !!canvas, ready: canvas?.getAttribute('data-ready') ?? null }
+    return {
+      exists: !!canvas,
+      ready: canvas?.getAttribute('data-ready') ?? null,
+      backend: canvas?.getAttribute('data-backend') ?? null,
+    }
   })
 
   // mid-dissolve: park between panels to capture the halftone paint wipe
