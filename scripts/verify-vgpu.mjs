@@ -76,6 +76,15 @@ await reducedPage.locator('.horn-sign').click()
 await reducedPage.waitForTimeout(300)
 const reducedHorn = Number(await reducedPage.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-horn') ?? 0))
 check('reduced motion skips the ripple', reducedHorn === 0, reducedHorn)
+
+await reducedPage.evaluate(() => {
+  const track = document.querySelector('.track')
+  track.style.scrollSnapType = 'none'
+  track.scrollLeft = track.clientWidth * 1.5
+})
+await reducedPage.waitForTimeout(250)
+const transitionPanel = await reducedPage.evaluate(() => document.querySelector('.paint-canvas')?.getAttribute('data-panel'))
+check('mid-transition selects the destination panel', transitionPanel === '2', transitionPanel)
 await reduced.close()
 
 const fallback = await browser.newContext({ viewport: { width: 1440, height: 900 } })

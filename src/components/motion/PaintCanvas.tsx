@@ -17,7 +17,7 @@ interface PaintParams {
   mix: number
   horn: number
   hornAge: number
-  _pad: number
+  panel: number
 }
 
 interface PaintState {
@@ -71,16 +71,17 @@ function buildParams(state: PaintState, stops: NavStop[], size: readonly [number
     mix,
     horn: state.horn,
     hornAge: state.hornAge,
-    _pad: 0,
+    panel: next,
   }
   return params
 }
 
 function syncDataset(canvas: HTMLCanvasElement, state: PaintState, stops: NavStop[]) {
-  const { index, mix } = mixForStop(state.progress, stops.length)
+  const { index, next, mix } = mixForStop(state.progress, stops.length)
   canvas.dataset.mix = mix.toFixed(3)
   canvas.dataset.progress = state.progress.toFixed(3)
   canvas.dataset.stop = String(index)
+  canvas.dataset.panel = String(next)
   canvas.dataset.horn = state.horn.toFixed(3)
 }
 
