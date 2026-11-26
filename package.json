@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "verify:shader": "node scripts/verify-shader.mjs",
+    "verify:portrait": "node scripts/verify-portrait-shader.mjs",
     "verify:vgpu": "node scripts/verify-vgpu.mjs"
   },
   "dependencies": {
