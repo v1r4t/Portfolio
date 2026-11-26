@@ -27,7 +27,7 @@ export const NavigationRoad: React.FC<NavigationRoadProps> = ({
   return (
     <>
       <nav
-        className={`road ${isRoadReady ? 'is-road' : ''}`}
+        className={`road${isRoadReady ? ' is-road' : ''}`}
         role="navigation"
         aria-label="Sections"
         aria-hidden={!isRoadReady}
