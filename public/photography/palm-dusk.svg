@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-label="Palm silhouettes against an orange dusk sky">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38185c"/>
+      <stop offset="0.35" stop-color="#a63568"/>
+      <stop offset="0.62" stop-color="#f06a55"/>
+      <stop offset="0.82" stop-color="#ffb45f"/>
+      <stop offset="1" stop-color="#ffe29a"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#fff1b8"/>
+      <stop offset="0.5" stop-color="#ffcf6e" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#ffcf6e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <circle cx="470" cy="820" r="230" fill="url(#glow)"/>
+  <circle cx="470" cy="820" r="82" fill="#fff0b0"/>
+  <g fill="#3a1a33" opacity="0.35">
+    <rect x="60" y="410" width="360" height="12" rx="6"/>
+    <rect x="330" y="485" width="470" height="10" rx="5"/>
+    <rect x="120" y="560" width="300" height="9" rx="4"/>
+  </g>
+  <path d="M0 1080 L180 1010 L360 1075 L540 1005 L720 1080 L900 1020 L900 1200 L0 1200 Z" fill="#2b1028"/>
+  <g stroke="#1b0a18" fill="none" stroke-linecap="round">
+    <path d="M180 1180 C215 970 240 800 280 650" stroke-width="22"/>
+    <path d="M280 650 C220 618 165 628 118 672" stroke-width="12"/>
+    <path d="M280 650 C248 586 203 562 148 574" stroke-width="11"/>
+    <path d="M280 650 C302 578 356 552 410 574" stroke-width="12"/>
+    <path d="M280 650 C340 620 394 632 432 684" stroke-width="11"/>
+    <path d="M280 650 C278 588 290 542 314 506" stroke-width="10"/>
+    <path d="M720 1180 C690 980 664 820 628 690" stroke-width="20"/>
+    <path d="M628 690 C682 660 736 670 780 712" stroke-width="11"/>
+    <path d="M628 690 C658 628 704 606 756 618" stroke-width="10"/>
+    <path d="M628 690 C608 622 558 598 508 620" stroke-width="11"/>
+    <path d="M628 690 C570 660 520 672 484 722" stroke-width="10"/>
+    <path d="M628 690 C630 630 620 588 598 554" stroke-width="9"/>
+  </g>
+  <rect width="900" height="1200" fill="#000" filter="url(#grain)" opacity="0.45"/>
+</svg>

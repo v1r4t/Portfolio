@@ -277,7 +277,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
       </div>
 
       <div className="role" data-reveal>
-        I make noisy signals legible
+        I build loud ideas into clear systems.
       </div>
 
       <div className="name-side left">

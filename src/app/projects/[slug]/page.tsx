@@ -81,6 +81,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </dl>
 
+        {(project.links?.live || project.links?.github || project.links?.linkedin) && (
+          <div className="project-links">
+            {project.links?.live && (
+              <a href={project.links.live} target="_blank" rel="noopener noreferrer">
+                Live Site ↗
+              </a>
+            )}
+            {project.links?.github && (
+              <a href={project.links.github} target="_blank" rel="noopener noreferrer">
+                GitHub ↗
+              </a>
+            )}
+            {project.links?.linkedin && (
+              <a href={project.links.linkedin} target="_blank" rel="noopener noreferrer">
+                LinkedIn ↗
+              </a>
+            )}
+          </div>
+        )}
+
         <section className="case-block">
           <h2>Overview</h2>
           <p>{caseStudy.overview}</p>

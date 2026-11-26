@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-label="Violet dusk settling over a dark ridge">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#160d2e"/>
+      <stop offset="0.35" stop-color="#472560"/>
+      <stop offset="0.62" stop-color="#9b3d61"/>
+      <stop offset="0.82" stop-color="#ed6a5a"/>
+      <stop offset="1" stop-color="#ffb072"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#ffe9b0"/>
+      <stop offset="0.5" stop-color="#ffb987" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ffb987" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <g fill="#f3e9d2">
+    <circle cx="90" cy="110" r="1.6"/><circle cx="180" cy="70" r="1.2"/><circle cx="280" cy="150" r="1.8"/>
+    <circle cx="380" cy="90" r="1.3"/><circle cx="500" cy="140" r="1.5"/><circle cx="610" cy="80" r="1.2"/>
+    <circle cx="720" cy="170" r="1.7"/><circle cx="820" cy="100" r="1.3"/><circle cx="140" cy="230" r="1.2"/>
+    <circle cx="340" cy="270" r="1.4"/><circle cx="560" cy="250" r="1.1"/><circle cx="760" cy="300" r="1.5"/>
+  </g>
+  <circle cx="460" cy="900" r="250" fill="url(#glow)"/>
+  <circle cx="460" cy="900" r="70" fill="#ffe2a6"/>
+  <g fill="#3a1a3c" opacity="0.35">
+    <rect x="90" y="500" width="420" height="12" rx="6"/>
+    <rect x="360" y="570" width="450" height="10" rx="5"/>
+    <rect x="160" y="650" width="360" height="9" rx="4"/>
+    <rect x="470" y="720" width="340" height="8" rx="4"/>
+  </g>
+  <path d="M0 980 L160 890 L320 970 L500 875 L680 975 L840 905 L900 940 L900 1200 L0 1200 Z" fill="#2a1330"/>
+  <path d="M0 1090 L180 1010 L360 1085 L550 995 L740 1090 L900 1020 L900 1200 L0 1200 Z" fill="#140a1c"/>
+  <rect width="900" height="1200" fill="#000" filter="url(#grain)" opacity="0.45"/>
+</svg>

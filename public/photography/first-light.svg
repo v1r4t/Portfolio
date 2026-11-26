@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-label="Pale dawn light and mist over distant hills">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7093ad"/>
+      <stop offset="0.4" stop-color="#b8bfbd"/>
+      <stop offset="0.68" stop-color="#e8c9a7"/>
+      <stop offset="1" stop-color="#f7d7a6"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#fff6d8"/>
+      <stop offset="0.55" stop-color="#ffdf9e" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ffdf9e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <circle cx="560" cy="760" r="190" fill="url(#glow)"/>
+  <circle cx="560" cy="760" r="54" fill="#fff3cf"/>
+  <g fill="#f8ead4" opacity="0.38">
+    <rect x="0" y="620" width="900" height="26"/>
+    <rect x="0" y="690" width="900" height="18"/>
+    <rect x="0" y="842" width="900" height="30"/>
+    <rect x="0" y="920" width="900" height="20"/>
+  </g>
+  <path d="M0 860 L130 760 L270 840 L420 735 L570 845 L720 770 L900 850 L900 1200 L0 1200 Z" fill="#7e8f8a" opacity="0.55"/>
+  <path d="M0 960 L150 870 L300 950 L470 855 L640 955 L790 890 L900 940 L900 1200 L0 1200 Z" fill="#53645f" opacity="0.8"/>
+  <path d="M0 1080 L170 990 L340 1070 L520 975 L700 1075 L900 1000 L900 1200 L0 1200 Z" fill="#2c3a35"/>
+  <g fill="#1c2723">
+    <path d="M150 1090 l14 -100 h12 l16 100 Z"/>
+    <ellipse cx="171" cy="982" rx="52" ry="34"/>
+    <ellipse cx="133" cy="998" rx="34" ry="24"/>
+    <ellipse cx="209" cy="1000" rx="30" ry="22"/>
+  </g>
+  <rect width="900" height="1200" fill="#000" filter="url(#grain)" opacity="0.4"/>
+</svg>

@@ -5,6 +5,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { getAllPosts, getPost, getPostSlugs } from '@/lib/posts'
 import { createPageMetadata } from '@/lib/metadata'
 import { SmoothScroll } from '@/components/SmoothScroll'
+import { PhotoGallery } from '@/components/blog/PhotoGallery'
 import { BarcodeStrip, Marquee } from '@/components/art/Ornaments'
 
 interface BlogPageProps {
@@ -73,6 +74,8 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <div className="prose">
           <MDXRemote source={content} />
         </div>
+
+        {meta.gallery && meta.gallery.length > 0 && <PhotoGallery photos={meta.gallery} />}
 
         <div className="tag-row">
           {meta.tags.map((tag) => (

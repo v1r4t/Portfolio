@@ -31,39 +31,48 @@ export const AboutPanel: React.FC = React.memo(function AboutPanel() {
               </span>
             </div>
             <figcaption>
-              <span className="name-yellow">Dhruva Vura</span> / Designer &amp; developer
+              <span className="name-yellow">Dhruva Vura</span> / CS undergrad &amp; builder
             </figcaption>
           </figure>
 
           <div className="about-copy" data-reveal>
             <p className="about-lede">
-              I make noisy signals legible.
+              I build loud ideas into clear systems.
               <span className="deva-accent" lang="hi">
                 {' '}
                 मेहनत
               </span>
             </p>
             <p className="about-bio">
-              I am a designer and creative engineer working across identity systems, high-speed web platforms,
-              and generative motion. Drawing conviction from Indian highway sign-painting, I build digital
-              experiences with high tactile contrast, deep cultural character, and sub-millisecond execution.
+              I’m a Computer Science undergrad, builder at heart, and curious mind who loves exploring the
+              intersection of AI, technology, and creativity. I enjoy turning random ideas into real-world
+              projects, experimenting with emerging tech, and figuring out how things work (sometimes by breaking
+              them first).
+            </p>
+            <p className="about-bio">
+              From building intelligent systems to participating in hackathons and exploring new ideas, I’m always
+              looking for something interesting to create. I believe in learning by building, questioning the
+              ordinary, and staying curious.
+            </p>
+            <p className="about-bio about-signoff">
+              Still figuring things out, one project, one bug, and one crazy idea at a time.
             </p>
             <dl className="facts">
               <div>
                 <dt>Based in</dt>
-                <dd>Hyderabad &amp; Bengaluru</dd>
+                <dd>Bengaluru, Karnataka, India</dd>
               </div>
               <div>
                 <dt>Focus</dt>
-                <dd>Brand, Web, Motion</dd>
+                <dd>Agentic AI</dd>
               </div>
               <div>
                 <dt>Tools</dt>
-                <dd>React 19, TypeScript, WGSL, Figma</dd>
+                <dd>Python, Java, JavaScript, React, FastAPI, PostgreSQL</dd>
               </div>
               <div>
                 <dt>Status</dt>
-                <dd className="status-hot">Open for Commissions</dd>
+                <dd className="status-hot">Looking For Opportunities</dd>
               </div>
             </dl>
             <p className="about-note">DOSSIER REF // ARCHIVE 2026 // DHRUVA VURA</p>

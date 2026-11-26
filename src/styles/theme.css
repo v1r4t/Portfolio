@@ -424,6 +424,7 @@ html, body {
     white-space: nowrap;
   }
   .role {
+    bottom: 14rem;
     font-size: 0.55rem;
     letter-spacing: 0.12em;
   }
@@ -517,7 +518,11 @@ html, body {
   mix-blend-mode: multiply;
 }
 .about-figure figcaption {
+  display: inline-block;
   margin-top: 1rem;
+  padding: 0.35rem 0.55rem;
+  background: var(--t-ink);
+  color: var(--t-paper);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 700;
@@ -525,23 +530,36 @@ html, body {
   text-transform: uppercase;
 }
 .name-yellow { color: var(--t-yellow); }
-.about-copy { max-width: 640px; }
+.about-copy {
+  max-width: 720px;
+  padding: clamp(1.4rem, 2.6vw, 2.4rem);
+  background: var(--t-paper);
+  border: 3px solid var(--t-ink);
+  box-shadow: 8px 8px 0 var(--t-ink);
+  transform: rotate(0.35deg);
+}
 .about-lede {
   margin: 0 0 1.2rem;
   font-family: var(--font-body);
   font-size: clamp(1.6rem, 2.6vw, 2.8rem);
   font-weight: 700;
   line-height: 1.05;
-  color: var(--t-paper);
+  color: var(--t-ink);
 }
 .about-bio {
   margin: 0 0 1.5rem;
   font-family: var(--font-body);
   font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   line-height: 1.6;
-  color: var(--t-paper);
-  opacity: 0.88;
+  color: var(--t-ink);
 }
+.about-signoff {
+  padding-top: 1rem;
+  border-top: 2px solid var(--t-ink);
+  font-weight: 700;
+  color: var(--t-red);
+}
+.about-copy .deva-accent { color: var(--t-red); }
 .facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -554,13 +572,15 @@ html, body {
   font-size: 0.55rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  opacity: 0.65;
+  color: var(--t-ink);
+  opacity: 0.72;
 }
 .facts dd {
   margin: 0;
   font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 600;
+  color: var(--t-ink);
 }
 .about-note {
   margin: 0;
@@ -568,7 +588,8 @@ html, body {
   font-size: 0.55rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 0.5;
+  color: var(--t-ink);
+  opacity: 0.55;
 }
 
 /* ——— 03: BLOGS PANEL STYLES ——— */
@@ -1128,6 +1149,19 @@ html, body {
 }
 
 /* Responsive adjustments */
+@media (max-height: 980px) and (min-width: 901px) {
+  .about-copy { padding: clamp(1.2rem, 2vw, 1.6rem); }
+  .about-lede {
+    margin-bottom: 0.9rem;
+    font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+  }
+  .about-bio {
+    margin-bottom: 1rem;
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+  .about-signoff { padding-top: 0.8rem; }
+}
 @media (max-width: 900px) {
   .panel-inner {
     padding-bottom: 150px;
@@ -1490,7 +1524,7 @@ html, body {
   paint-order: stroke fill;
   white-space: nowrap;
 }
-.status-hot { color: var(--t-yellow); font-weight: 700; }
+.status-hot { color: var(--t-red); font-weight: 700; }
 .cover-motif {
   width: clamp(120px, 12vw, 190px);
   height: clamp(120px, 12vw, 190px);
@@ -1904,6 +1938,167 @@ a.project-card {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* Photo dispatch */
+.photo-gallery {
+  margin: 2.6rem 0 1rem;
+}
+.photo-grid {
+  columns: 2;
+  column-gap: 1.1rem;
+}
+.photo-card {
+  display: block;
+  width: 100%;
+  margin: 0 0 1.1rem;
+  padding: 0.5rem 0.5rem 0.65rem;
+  break-inside: avoid;
+  border: 3px solid var(--t-ink);
+  background: var(--t-paper);
+  box-shadow: 6px 6px 0 var(--t-ink);
+  color: var(--t-ink);
+  font: inherit;
+  text-align: left;
+  cursor: zoom-in;
+  transform: rotate(-0.35deg);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.photo-card:nth-child(even) {
+  transform: rotate(0.45deg);
+}
+.photo-card:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: 9px 9px 0 var(--t-ink);
+}
+.photo-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--t-ink);
+}
+.photo-caption {
+  display: block;
+  margin-top: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(8, 6, 14, 0.94);
+}
+.photo-lightbox figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+}
+.photo-lightbox figure img {
+  max-width: min(86vw, 1100px);
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  border: 3px solid var(--t-paper);
+  box-shadow: 8px 8px 0 var(--t-red);
+}
+.photo-lightbox figcaption {
+  max-width: 60ch;
+  color: var(--t-paper);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+}
+.photo-close,
+.photo-nav {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 2px solid var(--t-ink);
+  background: var(--t-yellow);
+  color: var(--t-ink);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--t-ink);
+}
+.photo-close {
+  top: 1rem;
+  right: 1rem;
+}
+.photo-prev {
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.photo-next {
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.photo-close:hover,
+.photo-nav:hover {
+  background: var(--t-turquoise);
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 0 0 2.5rem;
+}
+.project-links a {
+  display: inline-block;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--t-ink);
+  background: var(--t-yellow);
+  box-shadow: 4px 4px 0 var(--t-ink);
+  color: var(--t-ink);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.project-links a:hover {
+  background: var(--t-turquoise);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--t-ink);
+}
+
+@media (max-width: 640px) {
+  .photo-grid {
+    columns: 1;
+  }
+  .photo-prev,
+  .photo-next {
+    top: auto;
+    bottom: 1rem;
+    transform: none;
+  }
+  .photo-prev {
+    left: 1rem;
+  }
+  .photo-next {
+    right: 1rem;
+  }
 }
 
 /* Not found */

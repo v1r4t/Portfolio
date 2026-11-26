@@ -22,6 +22,10 @@ export const PROJECTS: Project[] = [
     themeColor: '#45107a',
     accentColor: '#00b3b0',
     coverPattern: 'lotus',
+    links: {
+      live: 'https://voyaq.vercel.app',
+      github: 'https://github.com/v1r4t/VOYAQ',
+    },
     caseStudy: {
       client: 'Independent Product',
       timeline: '2026',
@@ -54,6 +58,10 @@ export const PROJECTS: Project[] = [
     themeColor: '#00b3b0',
     accentColor: '#45107a',
     coverPattern: 'hazard',
+    links: {
+      live: 'https://arthiq-tau.vercel.app',
+      github: 'https://github.com/v1r4t/Arthiq',
+    },
     caseStudy: {
       client: 'CODEFURY 9.0',
       timeline: '2026',
@@ -87,6 +95,10 @@ export const PROJECTS: Project[] = [
     themeColor: '#8cc63f',
     accentColor: '#1b3a8c',
     coverPattern: 'peacock',
+    links: {
+      linkedin:
+        'https://www.linkedin.com/posts/dhruva-vura_hackathon-jadal-ai-activity-7513102678994976768-IHHA',
+    },
     caseStudy: {
       client: 'NIMBUS 2026',
       timeline: '2026',

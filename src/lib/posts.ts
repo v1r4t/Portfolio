@@ -30,6 +30,15 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
   }
 
   const status = data.status === 'in-progress' ? 'in-progress' : 'published'
+  const gallery = Array.isArray(data.gallery)
+    ? (data.gallery as Record<string, unknown>[]).map((photo) => ({
+        src: String(photo.src),
+        alt: String(photo.alt ?? photo.caption ?? ''),
+        caption: String(photo.caption ?? ''),
+        width: Number(photo.width) || 1200,
+        height: Number(photo.height) || 900,
+      }))
+    : undefined
 
   return {
     meta: {
@@ -41,6 +50,7 @@ function parsePostFile(filename: string): { meta: PostMeta; content: string } {
       tags: (data.tags as string[]) ?? [],
       order,
       status,
+      gallery,
       permitMeta: {
         transitNo: String(permits!.transitNo),
         origin: String(permits!.origin),

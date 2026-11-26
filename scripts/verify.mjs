@@ -130,9 +130,10 @@ const browser = await chromium.launch()
   await page.screenshot({ path: path.join(OUT, 'project-detail.png'), fullPage: false })
   await context.close()
 
-  const blog = await openPage(browser, { url: `${BASE}/blog/sign-painters-eye-highway-lettering`, viewport: { width: 1440, height: 900 } })
+  const blog = await openPage(browser, { url: `${BASE}/blog/some-of-my-best-captures`, viewport: { width: 1440, height: 900 } })
   results.blogParagraphs = await blog.page.locator('.prose p').count()
   results.blogTitle = await blog.page.locator('h1').first().innerText()
+  results.blogPhotos = await blog.page.locator('.photo-card').count()
   await blog.page.screenshot({ path: path.join(OUT, 'blog-detail.png'), fullPage: false })
   await blog.context.close()
 }

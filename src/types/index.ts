@@ -10,6 +10,11 @@ export interface Project {
   themeColor: string
   accentColor: string
   coverPattern: 'lotus' | 'peacock' | 'elephant' | 'hazard'
+  links?: {
+    live?: string
+    github?: string
+    linkedin?: string
+  }
   caseStudy: {
     client: string
     timeline: string
@@ -23,6 +28,14 @@ export interface Project {
   }
 }
 
+export interface GalleryPhoto {
+  src: string
+  alt: string
+  caption: string
+  width: number
+  height: number
+}
+
 export interface PostMeta {
   slug: string
   title: string
@@ -32,6 +45,7 @@ export interface PostMeta {
   tags: string[]
   order: number
   status: 'published' | 'in-progress'
+  gallery?: GalleryPhoto[]
   permitMeta: {
     transitNo: string
     origin: string

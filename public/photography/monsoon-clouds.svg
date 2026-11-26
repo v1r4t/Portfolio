@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Heavy monsoon clouds over a dark valley">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b2029"/>
+      <stop offset="0.42" stop-color="#28505a"/>
+      <stop offset="0.72" stop-color="#6f9294"/>
+      <stop offset="1" stop-color="#c6d3cd"/>
+    </linearGradient>
+    <linearGradient id="rain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dbe7e2" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#dbe7e2" stop-opacity="0.08"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1200" height="900" fill="url(#sky)"/>
+  <g fill="#e7efeb" opacity="0.88">
+    <ellipse cx="250" cy="245" rx="250" ry="82"/>
+    <ellipse cx="470" cy="205" rx="220" ry="72"/>
+    <ellipse cx="740" cy="260" rx="290" ry="92"/>
+    <ellipse cx="1020" cy="215" rx="210" ry="70"/>
+    <ellipse cx="120" cy="290" rx="170" ry="58"/>
+  </g>
+  <g fill="#9fb3af" opacity="0.7">
+    <ellipse cx="260" cy="292" rx="240" ry="52"/>
+    <ellipse cx="560" cy="315" rx="250" ry="55"/>
+    <ellipse cx="900" cy="300" rx="260" ry="58"/>
+  </g>
+  <g stroke="url(#rain)" stroke-width="3" stroke-linecap="round">
+    <path d="M180 360 l-22 190"/>
+    <path d="M250 380 l-26 220"/>
+    <path d="M330 350 l-20 180"/>
+    <path d="M410 390 l-28 230"/>
+    <path d="M500 360 l-22 195"/>
+    <path d="M580 400 l-26 215"/>
+    <path d="M660 365 l-20 190"/>
+    <path d="M740 395 l-26 225"/>
+    <path d="M830 360 l-22 200"/>
+    <path d="M910 390 l-26 220"/>
+    <path d="M990 355 l-20 185"/>
+    <path d="M1070 385 l-26 225"/>
+  </g>
+  <path d="M0 700 L170 610 L340 690 L520 600 L700 690 L880 615 L1060 700 L1200 650 L1200 900 L0 900 Z" fill="#152a2c"/>
+  <path d="M0 790 L190 730 L380 790 L570 725 L760 795 L950 740 L1200 800 L1200 900 L0 900 Z" fill="#0a1719"/>
+  <rect width="1200" height="900" fill="#000" filter="url(#grain)" opacity="0.5"/>
+</svg>
