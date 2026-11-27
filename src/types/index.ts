@@ -20,7 +20,7 @@ export interface Project {
   slug: string
   title: string
   subtitle: string
-  category: 'Brand Identity' | 'Web Engineering' | 'Motion Systems' | 'Creative Direction'
+  category: 'Brand Identity' | 'Web Engineering' | 'Motion Systems' | 'Creative Direction' | 'AI Engineering'
   year: string
   description: string
   tags: string[]

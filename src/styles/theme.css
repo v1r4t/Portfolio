@@ -591,6 +591,15 @@ html, body {
   color: var(--t-ink);
   opacity: 0.55;
 }
+.about-credentials {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t-ink);
+}
 
 /* ——— 03: BLOGS PANEL STYLES ——— */
 .blogs {
@@ -1762,6 +1771,20 @@ a.project-card {
   font-size: clamp(1rem, 1.4vw, 1.25rem);
   line-height: 1.5;
   font-weight: 500;
+}
+.detail-kicker,
+.detail-sub {
+  display: inline-block;
+  color: var(--t-paper);
+  background: var(--t-ink);
+  border: 2px solid var(--t-ink);
+  box-shadow: 4px 4px 0 var(--case-accent, var(--t-yellow));
+}
+.detail-kicker {
+  padding: 0.3rem 0.55rem;
+}
+.detail-sub {
+  padding: 0.45rem 0.7rem;
 }
 .detail-hero .corner-cluster {
   width: clamp(110px, 12vw, 180px);

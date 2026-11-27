@@ -9,6 +9,7 @@ import {
   Teko,
 } from 'next/font/google'
 import { MotifDefs } from '@/components/art/MotifDefs'
+import { ogImageUrl } from '@/lib/metadata'
 import { SITE_URL } from '@/lib/site'
 import '../styles/theme.css'
 
@@ -49,18 +50,43 @@ const barlow = Barlow({
   display: 'swap',
 })
 
+const DESCRIPTION =
+  'Dhruva Vura — portfolio fusing authentic Indian highway truck art and high-performance web engineering.'
+
+const HOME_OG_IMAGE = ogImageUrl({
+  title: 'Dhruva Vura',
+  sub: 'Designer & Creative Engineer',
+  bg: '#45107a',
+  accent: '#ffd400',
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: 'Dhruva Vura — Designer & Creative Engineer',
     template: '%s — Dhruva Vura',
   },
-  description:
-    'Dhruva Vura — portfolio fusing authentic Indian highway truck art and high-performance web engineering.',
+  description: DESCRIPTION,
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     siteName: 'Dhruva Vura',
     locale: 'en_IN',
+    description: DESCRIPTION,
+    images: [
+      {
+        url: HOME_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: 'Dhruva Vura — Designer & Creative Engineer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dhruva Vura — Designer & Creative Engineer',
+    description: DESCRIPTION,
+    images: [HOME_OG_IMAGE],
   },
 }
 

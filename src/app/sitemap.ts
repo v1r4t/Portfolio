@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_URL.replace(/\/$/, '')
-  const posts = getAllPosts()
+  const posts = getAllPosts().filter((post) => post.status === 'published')
   const now = new Date()
 
   return [

@@ -75,6 +75,9 @@ export const AboutPanel: React.FC = React.memo(function AboutPanel() {
                 <dd className="status-hot">Looking For Opportunities</dd>
               </div>
             </dl>
+            <p className="about-credentials">
+              B.Tech CSE, Amrita Vishwa Vidyapeetham · Vice President, NSDC AVV-B
+            </p>
             <p className="about-note">DOSSIER REF // ARCHIVE 2026 // DHRUVA VURA</p>
           </div>
         </div>

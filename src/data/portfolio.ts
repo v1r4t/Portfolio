@@ -293,7 +293,7 @@ export const PROJECTS: Project[] = [
     slug: 'jadal',
     title: 'Jadal',
     subtitle: 'Agentic canal water allocation for warabandi irrigation',
-    category: 'Web Engineering',
+    category: 'AI Engineering',
     year: '2026',
     description:
       'A physics-informed, voice-first allocation system that helps distribute limited canal water fairly across farms and crops.',

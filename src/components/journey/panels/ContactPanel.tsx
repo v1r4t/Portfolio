@@ -58,7 +58,7 @@ export const ContactPanel: React.FC = React.memo(function ContactPanel() {
           </div>
 
           <p className="contact-note">
-            DIRECT TRANSMISSION // AVAILABLE FOR IDENTITY, CREATIVE ENGINEERING &amp; SENIOR ROLES
+            DIRECT TRANSMISSION // OPEN TO INTERNSHIPS &amp; EARLY-CAREER AI ROLES
           </p>
 
           <div className="contact-strip">
