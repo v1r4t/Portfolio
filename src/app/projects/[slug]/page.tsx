@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { PROJECTS, getProject } from '@/data/portfolio'
 import { createPageMetadata } from '@/lib/metadata'
 import { SmoothScroll } from '@/components/SmoothScroll'
+import { PhotoGallery } from '@/components/blog/PhotoGallery'
 import { ChevronBand, CornerCluster } from '@/components/art/Ornaments'
 
 interface ProjectPageProps {
@@ -147,6 +148,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </article>
               ))}
             </div>
+          </section>
+        )}
+
+        {caseStudy.screenshots && caseStudy.screenshots.length > 0 && (
+          <section className="case-block">
+            <h2>Product Tour</h2>
+            <div className="project-tour project-tour-desktop">
+              <PhotoGallery
+                photos={caseStudy.screenshots}
+                label={`${project.title} product screenshots`}
+              />
+            </div>
+            {caseStudy.mobileScreenshots && caseStudy.mobileScreenshots.length > 0 && (
+              <div className="project-tour project-tour-mobile">
+                <PhotoGallery
+                  photos={caseStudy.mobileScreenshots}
+                  label={`${project.title} mobile product screenshots`}
+                />
+              </div>
+            )}
           </section>
         )}
 

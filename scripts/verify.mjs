@@ -129,6 +129,7 @@ const browser = await chromium.launch()
   results.projectDetailHasMetrics = (await page.locator('.metric-tile').count()) > 0
   results.projectDetailFeatures = await page.locator('.feature-card').count()
   results.projectDetailDecisions = await page.locator('.decision-card').count()
+  results.projectDetailScreenshots = await page.locator('.project-tour-desktop .photo-card').count()
   await page.screenshot({ path: path.join(OUT, 'project-detail.png'), fullPage: false })
   await context.close()
 

@@ -8,6 +8,39 @@ export const NAV_STOPS: NavStop[] = [
   { id: 'contact', label: 'Contact', number: '05', bgTheme: '#fff8e7', title: 'Reach Out' },
 ]
 
+const VOYAQ_SHOTS = [
+  {
+    slug: '01-hero',
+    alt: 'Voyaq landing page with a live Goa weekend trip card showing friends, destination votes, budget, dates, and an AI itinerary.',
+    caption: 'Plan trips. Survive the group chat.',
+  },
+  {
+    slug: '02-group-chat',
+    alt: 'Voyaq group-chat illustration showing a weekend trip thread with 127 unread messages.',
+    caption: 'Every trip starts the same way: one idea, a hundred messages.',
+  },
+  {
+    slug: '03-vote',
+    alt: 'Voyaq destination vote with Goa leading at 5 votes, Gokarna at 2, and Pondicherry at 1.',
+    caption: 'Let everyone have a say.',
+  },
+  {
+    slug: '04-ai-itinerary',
+    alt: 'Voyaq AI itinerary generator showing a three-day, 12-stop Goa plan at ₹4,850 per person.',
+    caption: 'Let AI handle the planning.',
+  },
+  {
+    slug: '05-boarding-pass',
+    alt: 'Voyaq boarding-pass summary for a Goa weekend trip with 8 friends, 3 days, and a ₹4,850 budget.',
+    caption: 'Goa is happening.',
+  },
+  {
+    slug: '06-how-it-works',
+    alt: 'Voyaq four-step workflow: create squad, decide together, AI plans it, and trip ready.',
+    caption: 'Create squad → decide together → AI plans it → trip ready.',
+  },
+] as const
+
 export const PROJECTS: Project[] = [
   {
     id: 'project-voyaq',
@@ -43,6 +76,20 @@ export const PROJECTS: Project[] = [
       ],
       solution:
         'A squad-based flow where every decision becomes an explicit state: destinations are voted and locked, budgets are collected as anonymous ranges and reduced to a median, dates are coordinated, and the finished plan feeds an AI itinerary, a nine-tab destination hub, and an offline-ready toolkit.',
+      screenshots: VOYAQ_SHOTS.map((shot) => ({
+        src: `/projects/voyaq/${shot.slug}.webp`,
+        alt: shot.alt,
+        caption: shot.caption,
+        width: 1440,
+        height: 900,
+      })),
+      mobileScreenshots: VOYAQ_SHOTS.map((shot) => ({
+        src: `/projects/voyaq/mobile-${shot.slug}.webp`,
+        alt: shot.alt,
+        caption: shot.caption,
+        width: 390,
+        height: 844,
+      })),
       features: [
         {
           title: 'Squad room',

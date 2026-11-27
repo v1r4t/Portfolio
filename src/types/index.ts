@@ -42,6 +42,8 @@ export interface Project {
     challenge: string
     constraints?: string[]
     solution: string
+    screenshots?: GalleryPhoto[]
+    mobileScreenshots?: GalleryPhoto[]
     features?: CaseStudyFeature[]
     architecture?: CaseStudyStep[]
     decisions?: CaseStudyDecision[]

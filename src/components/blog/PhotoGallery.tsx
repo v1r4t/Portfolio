@@ -1,9 +1,16 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { GalleryPhoto } from '../../types'
 
-export function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
+export function PhotoGallery({
+  photos,
+  label = 'Photography',
+}: {
+  photos: GalleryPhoto[]
+  label?: string
+}) {
   const [active, setActive] = useState<number | null>(null)
   const dialogRef = useRef<HTMLDivElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -72,7 +79,7 @@ export function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
   const current = active === null ? null : photos[active]
 
   return (
-    <section className="photo-gallery" aria-label="Photography">
+    <section className="photo-gallery" aria-label={label}>
       <div className="photo-grid">
         {photos.map((photo, index) => (
           <button
@@ -94,55 +101,64 @@ export function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
         ))}
       </div>
 
-      {current && (
-        <div
-          ref={dialogRef}
-          className="photo-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={current.alt}
-          data-lenis-prevent
-          onClick={() => setActive(null)}
-        >
-          <button
-            ref={closeRef}
-            type="button"
-            className="photo-close"
+      {current &&
+        createPortal(
+          <div
+            ref={dialogRef}
+            className="photo-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={current.alt}
+            data-lenis-prevent
             onClick={() => setActive(null)}
-            aria-label="Close photograph"
           >
-            ✕
-          </button>
-          <button
-            type="button"
-            className="photo-nav photo-prev"
-            onClick={(event) => {
-              event.stopPropagation()
-              setActive((position) =>
-                position === null ? null : (position - 1 + photos.length) % photos.length,
-              )
-            }}
-            aria-label="Previous photograph"
-          >
-            ←
-          </button>
-          <figure onClick={(event) => event.stopPropagation()}>
-            <img src={current.src} alt={current.alt} width={current.width} height={current.height} />
-            <figcaption>{current.caption}</figcaption>
-          </figure>
-          <button
-            type="button"
-            className="photo-nav photo-next"
-            onClick={(event) => {
-              event.stopPropagation()
-              setActive((position) => (position === null ? null : (position + 1) % photos.length))
-            }}
-            aria-label="Next photograph"
-          >
-            →
-          </button>
-        </div>
-      )}
+            <button
+              ref={closeRef}
+              type="button"
+              className="photo-close"
+              onClick={() => setActive(null)}
+              aria-label="Close photograph"
+            >
+              ✕
+            </button>
+            <button
+              type="button"
+              className="photo-nav photo-prev"
+              onClick={(event) => {
+                event.stopPropagation()
+                setActive((position) =>
+                  position === null ? null : (position - 1 + photos.length) % photos.length,
+                )
+              }}
+              aria-label="Previous photograph"
+            >
+              ←
+            </button>
+            <figure onClick={(event) => event.stopPropagation()}>
+              <img
+                src={current.src}
+                alt={current.alt}
+                width={current.width}
+                height={current.height}
+              />
+              <figcaption>{current.caption}</figcaption>
+            </figure>
+            <button
+              type="button"
+              className="photo-nav photo-next"
+              onClick={(event) => {
+                event.stopPropagation()
+                setActive((position) =>
+                  position === null ? null : (position + 1) % photos.length,
+                )
+              }}
+              aria-label="Next photograph"
+            >
+              →
+            </button>
+          </div>,
+          document.body,
+        )}
     </section>
   )
 }
