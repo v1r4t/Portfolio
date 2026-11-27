@@ -1,12 +1,5 @@
 import type { NextConfig } from 'next'
-import { wgslTurbopackRule } from '@vgpu/wgsl/next'
 
-const nextConfig: NextConfig = {
-  turbopack: {
-    rules: {
-      '*.wgsl': wgslTurbopackRule({ minify: true }),
-    },
-  },
-}
+const nextConfig: NextConfig = {}
 
 export default nextConfig

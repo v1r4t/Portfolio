@@ -33,9 +33,8 @@ interface Uniforms {
 }
 
 /**
- * WebGL2 fallback for browsers without a usable WebGPU adapter. It renders the
- * same painted ground as `paint.wgsl`; if WebGL2 is also unavailable the canvas
- * stays flat and the body pigment shows through.
+ * WebGL2 paint engine. It renders the painted ground behind the journey; if
+ * WebGL2 is unavailable the canvas stays flat and the body pigment shows through.
  */
 export function PaintCanvasWebGL({ progress, stops }: PaintCanvasWebGLProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)

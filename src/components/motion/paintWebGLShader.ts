@@ -60,7 +60,7 @@ vec2 transitionField(float panel, vec2 uv, float progress, float aspect) {
 }
 
 void main() {
-  // gl_FragCoord is bottom-origin; flip once so the WGSL and GLSL fields align.
+  // gl_FragCoord is bottom-origin; flip once so the paint fields align.
   vec2 frag = vec2(gl_FragCoord.x, uResolution.y - gl_FragCoord.y);
   vec2 size = uResolution;
   float dotSize = max(6.0, size.y / 120.0);

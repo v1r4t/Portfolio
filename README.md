@@ -7,7 +7,7 @@ Personal portfolio of Dhruva Vura — Indian highway truck art meets high-perfor
 - **Next.js 16** (App Router, Turbopack) + **React 19** + **TypeScript** strict
 - **Tailwind CSS v4** via PostCSS, hand-written design tokens in `src/styles/theme.css`
 - **GSAP** (ScrollTrigger, SplitText) + **Lenis** for journey smoothing, decal type and parallax
-- **vgpu 0.6 + WGSL** paint engine: halftone-dissolve grounds, panel-specific transition masks (stamp, ticket, chevron, ink), a horn-reactive ripple, and a WebGL2 ground fallback
+- **WebGL2 paint engine** for halftone-dissolve grounds, panel-specific transition masks (stamp, ticket, chevron, ink), a horn-reactive ripple, and a flat pigment fallback; the portrait plate uses a CPU halftone painter
 - **Web Audio** analyser drives the horn-reactive bulb chains
 - **MDX** blog posts (`@mdx-js/mdx`) precompiled at build time into `src/data/posts.generated.json`
 - `next/font` for the six-voice type system (Teko, Modak, Anek Devanagari, Baloo Tammudu 2, Space Mono, Barlow)
@@ -57,16 +57,15 @@ Production: <https://dhruva-portfolio.dhruvav0308.workers.dev>
 
 ## Verification
 
-`scripts/verify.mjs` is a Playwright smoke test: panels, scroll math, hash restore (/#projects), keyboard nav, reduced motion, overlay pointer discipline, and detail routes. `scripts/verify-vgpu.mjs` checks the WebGPU paint engine and the flat fallback; `npm run verify:shader` renders the WGSL headlessly and asserts the pigments and horn ripple. Run the browser checks with the dev server up:
+`scripts/verify.mjs` is a Playwright smoke test: panels, scroll math, hash restore (/#projects), keyboard nav, reduced motion, overlay pointer discipline, the WebGL paint canvas, and detail routes. `scripts/verify-motion.mjs` checks the loader, cursor, horn response, detail-page parallax, and mobile canvas. Run the browser checks with the dev server up:
 
 ```bash
 npm install --no-save playwright
 npx playwright install chromium
 node scripts/verify.mjs
-npm run verify:vgpu
-npm run verify:shader
+node scripts/verify-motion.mjs
 ```
 
-`verify:vgpu` prefers the system Edge channel on Windows (needed for headless WebGPU) and falls back to Playwright Chromium.
+The paint canvas uses WebGL2 when available and exposes a flat pigment fallback when it is not.
 
 Design docs: `docs/superpowers/plans/2026-11-24-portfolio-rebuild.md` (plan).

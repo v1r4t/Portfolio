@@ -1,7 +1,6 @@
 /**
- * CPU halftone fallback for the portrait plates. Used when WebGPU is absent
- * or the device is lost; the GPU path draws the same dot field in
- * `src/shaders/portrait.wgsl`.
+ * CPU halftone painter for the portrait plates. It samples the portrait and
+ * draws an ink-dot field over the image without a GPU shader.
  */
 export function paintPortraitHalftone(img: HTMLImageElement, canvas: HTMLCanvasElement): void {
   if (!img.naturalWidth) return
