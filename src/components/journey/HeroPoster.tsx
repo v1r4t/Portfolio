@@ -93,7 +93,7 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
     const counter = { value: 0 }
     const counterTween = gsap.to(counter, {
       value: 100,
-      duration: 1.2,
+      duration: 2,
       ease: 'power2.inOut',
       onUpdate: () => {
         if (loadPercentRef.current) {
@@ -136,8 +136,8 @@ export const HeroPoster: React.FC<HeroPosterProps> = ({ onExploreClick }) => {
         } else {
           setIsLanded(true)
         }
-      }, 140)
-    }, 1200)
+      }, 180)
+    }, 2000)
 
     return () => {
       clearTimeout(timer)
