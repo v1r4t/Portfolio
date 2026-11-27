@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import { getAllPosts, getPost, getPostSlugs } from '@/lib/posts'
 import { createPageMetadata } from '@/lib/metadata'
 import { SmoothScroll } from '@/components/SmoothScroll'
@@ -38,7 +37,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const posts = getAllPosts().filter((p) => p.status === 'published')
   const index = posts.findIndex((p) => p.slug === slug)
   const next = posts[(index + 1) % posts.length]
-  const { meta, content } = post
+  const { meta, html } = post
 
   return (
     <main className="detail-page">
@@ -71,9 +70,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <Marquee text="ROUTE DISPATCH ✦ HORN OK PLEASE ✦ NH-44" />
         <BarcodeStrip className="blog-lead-barcode" />
 
-        <div className="prose">
-          <MDXRemote source={content} />
-        </div>
+        <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
 
         {meta.gallery && meta.gallery.length > 0 && <PhotoGallery photos={meta.gallery} />}
 

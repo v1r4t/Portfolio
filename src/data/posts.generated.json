@@ -1,0 +1,145 @@
+{
+  "posts": [
+    {
+      "meta": {
+        "slug": "some-of-my-best-captures",
+        "title": "Some Of My Best Captures",
+        "date": "NOV 2026",
+        "readTime": "10 FRAMES",
+        "summary": "A running collection of skies, ridgelines, and the quiet in between — photographed between trips and everything else.",
+        "tags": [
+          "Photography",
+          "Nature",
+          "Sky"
+        ],
+        "order": 1,
+        "status": "published",
+        "gallery": [
+          {
+            "src": "/photography/golden-ridge.svg",
+            "alt": "Layered hills under a burning orange sunset",
+            "caption": "Golden hour spilling over the ridge line.",
+            "width": 1200,
+            "height": 800
+          },
+          {
+            "src": "/photography/monsoon-clouds.svg",
+            "alt": "Heavy monsoon clouds over a dark valley",
+            "caption": "The ten minutes before the rain finally arrives.",
+            "width": 1200,
+            "height": 900
+          },
+          {
+            "src": "/photography/first-light.svg",
+            "alt": "Pale dawn light and mist over distant hills",
+            "caption": "First light, before the day decides what it wants to be.",
+            "width": 900,
+            "height": 1200
+          },
+          {
+            "src": "/photography/blue-ridge.svg",
+            "alt": "Blue mountain layers fading into haze",
+            "caption": "The Western Ghats doing their best blue-period impression.",
+            "width": 1200,
+            "height": 800
+          },
+          {
+            "src": "/photography/palm-dusk.svg",
+            "alt": "Palm silhouettes against an orange dusk sky",
+            "caption": "Palms holding up the last of the sun.",
+            "width": 900,
+            "height": 1200
+          },
+          {
+            "src": "/photography/river-bend.svg",
+            "alt": "A river bending through a wide valley",
+            "caption": "The river finding its own route, as usual.",
+            "width": 1200,
+            "height": 800
+          },
+          {
+            "src": "/photography/night-sky.svg",
+            "alt": "A dense field of stars over a dark horizon",
+            "caption": "A sky with more stars than the camera could hold.",
+            "width": 1200,
+            "height": 800
+          },
+          {
+            "src": "/photography/cloudbank.svg",
+            "alt": "Tall white clouds stacked in a turquoise sky",
+            "caption": "Clouds doing their best mountain impression.",
+            "width": 1200,
+            "height": 900
+          },
+          {
+            "src": "/photography/last-light.svg",
+            "alt": "Violet dusk settling over a dark ridge",
+            "caption": "Last light, and a good excuse to stay out longer.",
+            "width": 900,
+            "height": 1200
+          },
+          {
+            "src": "/photography/open-road.svg",
+            "alt": "An open road running toward a wide horizon",
+            "caption": "The road doing that thing where it disappears.",
+            "width": 1200,
+            "height": 800
+          }
+        ],
+        "permitMeta": {
+          "transitNo": "NH-44 // 2026-DISP-01",
+          "origin": "BENGALURU",
+          "destination": "EVERYWHERE",
+          "checkpoint": "GOLDEN HOUR"
+        }
+      },
+      "html": "<p>Most of what I point a camera at ends up being sky. A ridge holding the last light, monsoon clouds stacking over a valley, or a road that disappears exactly where the horizon begins.</p>\n<p>This is a running collection of those frames — the ones that survived the camera roll. The set below is a sketchbook stand-in while the full-resolution archive gets sorted; the captions are the notes I kept.</p>"
+    },
+    {
+      "meta": {
+        "slug": "sub-millisecond-canvas-rendering",
+        "title": "Sub-Millisecond Canvas: Taming 60fps Data Streams Without Dropping Frames",
+        "date": "AUG 2026",
+        "readTime": "8 MIN READ",
+        "summary": "Architecting zero-allocation render loops, Web Workers, and OffscreenCanvas pipelines for industrial-grade creative dev.",
+        "tags": [
+          "Performance",
+          "Canvas API",
+          "TypeScript"
+        ],
+        "order": 2,
+        "status": "in-progress",
+        "permitMeta": {
+          "transitNo": "NH-65 // 2026-DISP-02",
+          "origin": "VIJAYAWADA",
+          "destination": "PUNE",
+          "checkpoint": "WEIGHBRIDGE 09"
+        }
+      },
+      "html": "<p>The modern web runtime is extraordinarily fast until you ask the Garbage Collector to clean up 50,000 transient JavaScript objects every frame.</p>\n<p>When building the Downlink telemetry system, standard React state hooks proved fatal to sustained 60 FPS execution. Every re-render triggered micro-stutters during high-speed sensor bursts.</p>\n<p>The solution was architectural decoupling: React manages the shell and navigation state, while raw telemetry streams directly into a SharedArrayBuffer managed by an OffscreenCanvas worker.</p>\n<p>Treat the browser like a low-latency instrument. Pre-allocate your buffers, respect memory layout, and let the GPU do what it was built for.</p>"
+    },
+    {
+      "meta": {
+        "slug": "audio-identity-tactile-micro-interactions",
+        "title": "Why Every Designer Needs an Audio Identity & Tactile Micro-Interactions",
+        "date": "MAY 2026",
+        "readTime": "5 MIN READ",
+        "summary": "Exploring synthesized Web Audio, tactile haptics, and why the physical bulb horn remains the world's most communicative sound.",
+        "tags": [
+          "Sound Design",
+          "Web Audio API",
+          "Interaction"
+        ],
+        "order": 3,
+        "status": "in-progress",
+        "permitMeta": {
+          "transitNo": "NH-16 // 2026-DISP-03",
+          "origin": "VISAKHAPATNAM",
+          "destination": "CHENNAI",
+          "checkpoint": "COASTAL PASS 42"
+        }
+      },
+      "html": "<p>The human ear processes auditory signals in under 10 milliseconds — more than twice as fast as visual stimuli.</p>\n<p>Yet for two decades, web interfaces have been completely deaf and mute. We click sterile plastic screens without tactile or acoustic feedback.</p>\n<p>Integrating the Web Audio API does not mean playing obnoxious MP3 sound effects. It means synthesizing micro-acoustic harmonics that confirm user actions with pleasant, warm resonance.</p>\n<p>When a user taps &quot;Horn OK Please&quot; on this site, we synthesize dual harmonic frequencies with a gentle band-pass filter and compressor, evoking the iconic brass horn with zero external audio assets.</p>"
+    }
+  ]
+}

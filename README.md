@@ -9,7 +9,7 @@ Personal portfolio of Dhruva Vura — Indian highway truck art meets high-perfor
 - **GSAP** (ScrollTrigger, SplitText) + **Lenis** for journey smoothing, decal type and parallax
 - **vgpu 0.6 + WGSL** paint engine: halftone-dissolve grounds, panel-specific transition masks (stamp, ticket, chevron, ink), a horn-reactive ripple, and a WebGL2 ground fallback
 - **Web Audio** analyser drives the horn-reactive bulb chains
-- **MDX** blog posts (`next-mdx-remote`) with frontmatter (`gray-matter`)
+- **MDX** blog posts (`@mdx-js/mdx`) precompiled at build time into `src/data/posts.generated.json`
 - `next/font` for the six-voice type system (Teko, Modak, Anek Devanagari, Baloo Tammudu 2, Space Mono, Barlow)
 
 ## Run
@@ -20,6 +20,19 @@ npm run dev     # http://localhost:3000
 npm run build   # static build; all routes prerendered
 npm run start
 ```
+
+## Deploy
+
+The site runs on Cloudflare Workers through the OpenNext adapter.
+
+```bash
+npx wrangler login   # first time only
+npm run deploy:cf
+```
+
+Production: <https://dhruva-portfolio.dhruvav0308.workers.dev>
+
+`wrangler.jsonc` holds the Worker name, compatibility flags, assets binding, and the production `SITE_URL`. The deploy script applies a Windows-only junction fallback to the OpenNext copy step before building.
 
 ## Routes
 
@@ -37,7 +50,9 @@ npm run start
 - `src/components/journey/` — the journey, road, poster and five panels
 - `src/data/portfolio.ts` — projects + nav stops (typed)
 - `content/blog/*.mdx` — posts (frontmatter validated at build)
-- `src/lib/posts.ts` — MDX loading and validation
+- `scripts/generate-posts.mjs` — validates posts and precompiles MDX to bundled HTML
+- `src/data/posts.generated.json` — generated post metadata + HTML, committed for Cloudflare builds
+- `src/lib/posts.ts` — reads the generated posts module
 - `src/lib/metadata.ts` — canonical/OG metadata helper
 
 ## Verification

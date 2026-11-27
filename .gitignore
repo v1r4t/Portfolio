@@ -1,12 +1,17 @@
 node_modules/
 .next/
+.open-next/
+.wrangler/
 out/
 dist/
 *.log
 .env*
+.dev.vars
 !.env.example
+!.env.production
 .DS_Store
 *.tsbuildinfo
+cloudflare-env.d.ts
 next-env.d.ts
 .revert/
 
